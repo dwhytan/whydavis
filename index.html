@@ -19,6 +19,7 @@
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
+  <canvas id="sky" aria-hidden="true"></canvas>
   <canvas id="stars" aria-hidden="true"></canvas>
   <div class="nebula" aria-hidden="true"></div>
 
@@ -51,7 +52,12 @@
           <p class="prompt"><span class="p-user">~</span> <span class="p-sym">❯</span> whoami</p>
           <h1 class="name">Davis Huaytán<span class="cursor" aria-hidden="true"></span></h1>
           <p class="role">Software Development Engineer in Test</p>
+          <p class="summary">7+ years building test automation for banking and eCommerce.</p>
           <p class="focus"><span class="p-sym">❯</span> test automation · ci/cd · performance · security · ai testing</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="https://www.linkedin.com/in/davis-huaytan" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+            <a class="btn" href="https://github.com/dwhytan" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
       </article>
     </section>
@@ -60,81 +66,74 @@
     <section id="stack" class="section">
       <header class="sec-head reveal">
         <p class="eyebrow">Stack</p>
-        <h2>Tools I ship quality with</h2>
+        <h2>What I build with</h2>
       </header>
       <article class="window reveal">
         <div class="titlebar">
           <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
           <span class="title">Stack</span>
         </div>
-        <div class="win-body stack-grid">
-          <div class="group" style="--i:0">
-            <h3>Test Automation</h3>
-            <ul class="chips">
+        <div class="win-body stack-body">
+          <div class="group core" style="--i:0">
+            <h3>Core</h3>
+            <ul class="chips chips-core">
+              <li><i class="mono">SB</i>Serenity BDD · Screenplay</li>
               <li><i class="mono">PW</i>Playwright</li>
-              <li><i class="mono">SB</i>Serenity BDD</li>
-              <li><i class="mono">KD</i>Karate DSL</li>
               <li><i class="mono">RA</i>RestAssured</li>
-              <li><img src="assets/icons/selenium.svg" alt="">Selenium</li>
-              <li><img src="assets/icons/cypress.svg" alt="">Cypress</li>
-              <li><img src="assets/icons/appium.svg" alt="">Appium</li>
-              <li><img src="assets/icons/cucumber.svg" alt="">Cucumber</li>
-              <li><img src="assets/icons/postman.svg" alt="">Postman</li>
-              <li><i class="mono">TC</i>TestContainers</li>
-            </ul>
-          </div>
-          <div class="group" style="--i:1">
-            <h3>CI/CD &amp; DevOps</h3>
-            <ul class="chips">
+              <li><i class="mono">KD</i>Karate DSL</li>
+              <li><img src="assets/icons/openjdk.svg" alt="">Java</li>
+              <li><img src="assets/icons/salesforce.svg" alt="">Salesforce</li>
+              <li><img src="assets/icons/apachejmeter.svg" alt="">JMeter</li>
               <li><img src="assets/icons/jenkins.svg" alt="">Jenkins</li>
               <li><img src="assets/icons/githubactions.svg" alt="">GitHub Actions</li>
-              <li><img src="assets/icons/gitlab.svg" alt="">GitLab CI</li>
-              <li><img src="assets/icons/docker.svg" alt="">Docker</li>
-              <li><img src="assets/icons/kubernetes.svg" alt="">Kubernetes</li>
-              <li><img src="assets/icons/git.svg" alt="">Git</li>
             </ul>
           </div>
-          <div class="group" style="--i:2">
-            <h3>Performance &amp; Security</h3>
-            <ul class="chips">
-              <li><img src="assets/icons/apachejmeter.svg" alt="">JMeter</li>
-              <li><i class="mono">LR</i>LoadRunner</li>
-              <li><img src="assets/icons/k6.svg" alt="">k6</li>
-              <li><img src="assets/icons/owasp.svg" alt="">OWASP ZAP</li>
-              <li><img src="assets/icons/burpsuite.svg" alt="">Burp Suite</li>
-            </ul>
-          </div>
-          <div class="group" style="--i:3">
-            <h3>Cloud &amp; Platform</h3>
-            <ul class="chips">
-              <li><img src="assets/icons/salesforce.svg" alt="">Salesforce</li>
-              <li><i class="mono">AZ</i>Azure Data Factory</li>
-              <li><img src="assets/icons/vault.svg" alt="">HashiCorp Vault</li>
-              <li><i class="mono">BS</i>BrowserStack</li>
-              <li><i class="mono">LT</i>LambdaTest</li>
-            </ul>
-          </div>
-          <div class="group" style="--i:4">
-            <h3>Languages &amp; Data</h3>
-            <ul class="chips">
-              <li><img src="assets/icons/openjdk.svg" alt="">Java</li>
-              <li><img src="assets/icons/typescript.svg" alt="">TypeScript</li>
-              <li><img src="assets/icons/springboot.svg" alt="">Spring Boot</li>
-              <li><i class="mono">SQL</i>SQL Server</li>
-              <li><img src="assets/icons/mongodb.svg" alt="">MongoDB</li>
-              <li><img src="assets/icons/mysql.svg" alt="">MySQL</li>
-              <li><img src="assets/icons/oracle.svg" alt="">OracleDB</li>
-            </ul>
-          </div>
-          <div class="group" style="--i:5">
-            <h3>AI &amp; Management</h3>
-            <ul class="chips">
-              <li><img src="assets/icons/githubcopilot.svg" alt="">GitHub Copilot</li>
-              <li><i class="mono">MC</i>Microsoft Copilot</li>
-              <li><img src="assets/icons/googlegemini.svg" alt="">Gemini</li>
-              <li><img src="assets/icons/jira.svg" alt="">Jira &amp; Xray</li>
-              <li><i class="mono">AD</i>Azure DevOps</li>
-            </ul>
+          <div class="also">
+            <div class="group" style="--i:1">
+              <h3>Also: testing</h3>
+              <ul class="chips chips-sm">
+                <li><img src="assets/icons/selenium.svg" alt="">Selenium</li>
+                <li><img src="assets/icons/cypress.svg" alt="">Cypress</li>
+                <li><img src="assets/icons/appium.svg" alt="">Appium</li>
+                <li><img src="assets/icons/cucumber.svg" alt="">Cucumber</li>
+                <li><img src="assets/icons/postman.svg" alt="">Postman</li>
+                <li><i class="mono">TC</i>TestContainers</li>
+              </ul>
+            </div>
+            <div class="group" style="--i:2">
+              <h3>Also: performance and security</h3>
+              <ul class="chips chips-sm">
+                <li><i class="mono">LR</i>LoadRunner</li>
+                <li><img src="assets/icons/k6.svg" alt="">k6</li>
+                <li><img src="assets/icons/owasp.svg" alt="">OWASP ZAP</li>
+                <li><img src="assets/icons/burpsuite.svg" alt="">Burp Suite</li>
+              </ul>
+            </div>
+            <div class="group" style="--i:3">
+              <h3>Also: delivery and platform</h3>
+              <ul class="chips chips-sm">
+                <li><img src="assets/icons/gitlab.svg" alt="">GitLab CI</li>
+                <li><img src="assets/icons/docker.svg" alt="">Docker</li>
+                <li><img src="assets/icons/git.svg" alt="">Git</li>
+                <li><i class="mono">AZ</i>Azure Data Factory</li>
+                <li><img src="assets/icons/vault.svg" alt="">HashiCorp Vault</li>
+                <li><i class="mono">BS</i>BrowserStack</li>
+                <li><i class="mono">LT</i>LambdaTest</li>
+              </ul>
+            </div>
+            <div class="group" style="--i:4">
+              <h3>Also: languages, data and tooling</h3>
+              <ul class="chips chips-sm">
+                <li><img src="assets/icons/typescript.svg" alt="">TypeScript</li>
+                <li><img src="assets/icons/springboot.svg" alt="">Spring Boot</li>
+                <li><i class="mono">SQL</i>SQL Server</li>
+                <li><img src="assets/icons/mongodb.svg" alt="">MongoDB</li>
+                <li><img src="assets/icons/oracle.svg" alt="">OracleDB</li>
+                <li><img src="assets/icons/jira.svg" alt="">Jira and Xray</li>
+                <li><i class="mono">AD</i>Azure DevOps</li>
+                <li><img src="assets/icons/githubcopilot.svg" alt="">GitHub Copilot</li>
+              </ul>
+            </div>
           </div>
         </div>
       </article>
@@ -202,7 +201,7 @@
         <li class="cert glass reveal" style="--i:3"><img src="assets/badges/ct-ai.png" alt="" width="48" height="48"><div><b>AI Testing</b><span>ISTQB® CT-AI</span></div></li>
         <li class="cert glass reveal" style="--i:4"><img src="assets/badges/sf-admin.png" alt="" width="48" height="48"><div><b>Platform Administrator</b><span>Salesforce</span></div></li>
         <li class="cert glass reveal" style="--i:5"><img src="assets/badges/sf-associate.png" alt="" width="48" height="48"><div><b>Platform Foundations</b><span>Salesforce</span></div></li>
-        <li class="cert glass reveal" style="--i:6"><img src="assets/badges/sf-ai-associate.png" alt="" width="48" height="48"><div><b>AI Associate</b><span>Salesforce</span></div></li>
+        <li class="cert glass reveal" style="--i:6"><svg class="cert-mark" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#0f8fd6" fill-opacity=".14" stroke="#4fb3ea" stroke-opacity=".7" stroke-width="1.5"/><path d="M16 24.5l5.5 5.5L32.5 19" fill="none" stroke="#7cc9f2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>AI Associate</b><span>Salesforce</span></div></li>
       </ul>
     </section>
   </main>
@@ -213,23 +212,23 @@
 
   <!-- Dock -->
   <nav class="dock" aria-label="Quick navigation">
-    <a class="dock-item" href="#about" data-label="About" style="--g1:#8e86ff">
+    <a class="dock-item" href="#about" data-label="About" aria-label="About" style="--g1:#8e86ff">
       <svg viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
     </a>
-    <a class="dock-item" href="#stack" data-label="Stack" style="--g1:#6fb6ff">
+    <a class="dock-item" href="#stack" data-label="Stack" aria-label="Stack" style="--g1:#6fb6ff">
       <svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5"/></svg>
     </a>
-    <a class="dock-item" href="#work" data-label="Portfolio" style="--g1:#5be3a0">
+    <a class="dock-item" href="#work" data-label="Portfolio" aria-label="Portfolio" style="--g1:#5be3a0">
       <svg viewBox="0 0 24 24"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
     </a>
-    <a class="dock-item" href="#certs" data-label="Certifications" style="--g1:#f3a3d4">
+    <a class="dock-item" href="#certs" data-label="Certifications" aria-label="Certifications" style="--g1:#f3a3d4">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></svg>
     </a>
     <span class="dock-sep" aria-hidden="true"></span>
-    <a class="dock-item ext" href="https://github.com/dwhytan" target="_blank" rel="noopener" data-label="GitHub" style="--g1:#c9c6d8">
+    <a class="dock-item ext" href="https://github.com/dwhytan" target="_blank" rel="noopener" data-label="GitHub" aria-label="GitHub" style="--g1:#c9c6d8">
       <svg viewBox="0 0 24 24" class="fill"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
     </a>
-    <a class="dock-item ext" href="https://www.linkedin.com/in/davis-huaytan" target="_blank" rel="noopener" data-label="LinkedIn" style="--g1:#3a8ee6">
+    <a class="dock-item ext" href="https://www.linkedin.com/in/davis-huaytan" target="_blank" rel="noopener" data-label="LinkedIn" aria-label="LinkedIn" style="--g1:#3a8ee6">
       <svg viewBox="0 0 24 24" class="fill"><path d="M6.94 8.5H3.56V20h3.38V8.5zM5.25 3a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92zM20.44 13.2c0-3.1-1.65-4.94-4.32-4.94-1.5 0-2.5.82-2.92 1.6V8.5H9.84V20h3.38v-6.2c0-1.47.66-2.5 1.96-2.5 1.2 0 1.88.85 1.88 2.5V20h3.38v-6.8z"/></svg>
     </a>
   </nav>

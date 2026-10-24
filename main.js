@@ -5,12 +5,13 @@
   /* ── Deep-space background: milky way, twinkling stars, glows, shooting stars ── */
   const canvas = document.getElementById("stars");
   const ctx = canvas.getContext("2d");
-  const sky = document.createElement("canvas");
+  const sky = document.getElementById("sky");
   const sctx = sky.getContext("2d");
   const TINTS = ["255,255,255", "255,255,255", "205,218,255", "255,236,218", "222,208,255", "176,226,255"];
   const pick = (a) => a[(Math.random() * a.length) | 0];
   const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
   let W = 0, H = 0, dpr = 1, twinklers = [], giants = [], meteors = [], nextMeteor = 0;
+  let scrolling = false, scrollTimer, lastFrame = 0;
 
   // Pre-rendered glow sprite per tint, so bright stars cost one drawImage per frame
   const sprites = {};
@@ -41,6 +42,8 @@
   function buildSky() {
     sky.width = W * dpr;
     sky.height = H * dpr;
+    sky.style.width = W + "px";
+    sky.style.height = H + "px";
     sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     // Milky-way band: a diagonal river of faint dust and dense tiny stars
     const ang = -0.42, cx = W * 0.5, cy = H * 0.5, len = Math.hypot(W, H);
@@ -90,8 +93,6 @@
     }));
   }
 
-  const wrap = (v, m) => ((v % m) + m) % m;
-
   function spawnMeteor(now) {
     const fromLeft = Math.random() < 0.5;
     meteors.push({
@@ -104,33 +105,29 @@
   }
 
   function drawStars(now = 0) {
+    if (!reduced) requestAnimationFrame(drawStars);
+    // Twinkles are slow, so ~30fps is plenty; and while the page scrolls, keep the
+    // canvas frozen so the main thread and compositor only have to move content.
+    if (!reduced && (scrolling || now - lastFrame < 33)) return;
+    lastFrame = now;
+    if (!W || !H) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
-    const sy = scrollY;
 
-    // far layer: static sky, slow parallax
-    const o1 = wrap(-sy * 0.04, H);
-    ctx.drawImage(sky, 0, o1 - H, W, H);
-    ctx.drawImage(sky, 0, o1, W, H);
-
-    // mid layer: twinkling stars
-    const o2 = -sy * 0.09;
+    // twinkling stars
     for (const s of twinklers) {
       const tw = reduced ? 1 : 0.45 + 0.55 * Math.abs(Math.sin(now * s.s + s.p));
       ctx.fillStyle = `rgba(${s.t},${s.a * tw})`;
-      ctx.beginPath();
-      ctx.arc(s.x, wrap(s.y + o2, H), s.r, 0, 6.283);
-      ctx.fill();
+      ctx.fillRect(s.x - s.r, s.y - s.r, s.r * 2, s.r * 2);
     }
 
-    // near layer: bright stars with glow and spikes
-    const o3 = -sy * 0.15;
+    // bright stars with glow and spikes
     ctx.globalCompositeOperation = "lighter";
     for (const g of giants) {
       const tw = reduced ? 1 : 0.7 + 0.3 * Math.sin(now * g.s + g.p);
       const sz = g.size * tw;
       ctx.globalAlpha = 0.55 + 0.45 * tw;
-      ctx.drawImage(sprites[g.t], g.x - sz / 2, wrap(g.y + o3, H) - sz / 2, sz, sz);
+      ctx.drawImage(sprites[g.t], g.x - sz / 2, g.y - sz / 2, sz, sz);
     }
     ctx.globalAlpha = 1;
 
@@ -157,7 +154,6 @@
       }
     }
     ctx.globalCompositeOperation = "source-over";
-    if (!reduced) requestAnimationFrame(drawStars);
   }
 
   sizeStars();
@@ -165,9 +161,17 @@
   let resizeTimer;
   addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { sizeStars(); if (reduced) drawStars(); }, 150);
+    resizeTimer = setTimeout(() => {
+      if (innerWidth === W && Math.abs(innerHeight - H) < 160) return;
+      sizeStars();
+      if (reduced) drawStars();
+    }, 150);
   });
-  if (reduced) addEventListener("scroll", () => requestAnimationFrame(drawStars), { passive: true });
+  addEventListener("scroll", () => {
+    scrolling = true;
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => { scrolling = false; }, 140);
+  }, { passive: true });
 
   /* ── Reveal on scroll ── */
   const revealIO = new IntersectionObserver((entries) => {

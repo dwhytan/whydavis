@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Davis Huaytán — SDET</title>
+  <meta name="description" content="Davis Huaytán — Software Development Engineer in Test — test automation, CI/CD, performance and security testing.">
+  <meta name="theme-color" content="#16151c">
+  <meta property="og:title" content="Davis Huaytán — SDET">
+  <meta property="og:description" content="Test automation, CI/CD, performance and security testing. ISTQB and Salesforce certified.">
+  <meta property="og:url" content="https://whydavis.me">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://whydavis.me/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="nebula" aria-hidden="true"></div>
+  <div class="dots" aria-hidden="true"></div>
+
+  <!-- Menu bar -->
+  <header class="menubar">
+    <a class="mb-brand" href="#top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4.2" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(-28 12 12)"/></svg>
+      <strong>whydavis</strong>
+    </a>
+    <nav class="mb-nav" aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#stack">Stack</a>
+      <a href="#work">Work</a>
+      <a href="#certs">Certifications</a>
+    </nav>
+    <div class="mb-status">
+      <time id="clock" class="mb-clock"></time>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section id="about" class="section hero">
+      <article class="window hero-win reveal">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">davis@whydavis — zsh</span>
+        </div>
+        <div class="win-body hero-body">
+          <p class="prompt"><span class="p-user">~</span> <span class="p-sym">❯</span> whoami</p>
+          <h1 class="name">Davis Huaytán<span class="cursor" aria-hidden="true"></span></h1>
+          <p class="role">Software Development Engineer in Test</p>
+          <p class="focus"><span class="p-sym">❯</span> test automation · ci/cd · performance · security · ai testing</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Stack -->
+    <section id="stack" class="section">
+      <header class="sec-head reveal">
+        <p class="eyebrow">Stack</p>
+        <h2>Tools I ship quality with</h2>
+      </header>
+      <article class="window reveal">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">Stack</span>
+        </div>
+        <div class="win-body stack-grid">
+          <div class="group" style="--i:0">
+            <h3>Test Automation</h3>
+            <ul class="chips">
+              <li><i class="mono">PW</i>Playwright</li>
+              <li><i class="mono">SB</i>Serenity BDD</li>
+              <li><i class="mono">KD</i>Karate DSL</li>
+              <li><i class="mono">RA</i>RestAssured</li>
+              <li><img src="assets/icons/selenium.svg" alt="">Selenium</li>
+              <li><img src="assets/icons/cypress.svg" alt="">Cypress</li>
+              <li><img src="assets/icons/appium.svg" alt="">Appium</li>
+              <li><img src="assets/icons/cucumber.svg" alt="">Cucumber</li>
+              <li><img src="assets/icons/postman.svg" alt="">Postman</li>
+              <li><i class="mono">TC</i>TestContainers</li>
+            </ul>
+          </div>
+          <div class="group" style="--i:1">
+            <h3>CI/CD &amp; DevOps</h3>
+            <ul class="chips">
+              <li><img src="assets/icons/jenkins.svg" alt="">Jenkins</li>
+              <li><img src="assets/icons/githubactions.svg" alt="">GitHub Actions</li>
+              <li><img src="assets/icons/gitlab.svg" alt="">GitLab CI</li>
+              <li><img src="assets/icons/docker.svg" alt="">Docker</li>
+              <li><img src="assets/icons/kubernetes.svg" alt="">Kubernetes</li>
+              <li><img src="assets/icons/git.svg" alt="">Git</li>
+            </ul>
+          </div>
+          <div class="group" style="--i:2">
+            <h3>Performance &amp; Security</h3>
+            <ul class="chips">
+              <li><img src="assets/icons/apachejmeter.svg" alt="">JMeter</li>
+              <li><i class="mono">LR</i>LoadRunner</li>
+              <li><img src="assets/icons/k6.svg" alt="">k6</li>
+              <li><img src="assets/icons/owasp.svg" alt="">OWASP ZAP</li>
+              <li><img src="assets/icons/burpsuite.svg" alt="">Burp Suite</li>
+            </ul>
+          </div>
+          <div class="group" style="--i:3">
+            <h3>Cloud &amp; Platform</h3>
+            <ul class="chips">
+              <li><img src="assets/icons/salesforce.svg" alt="">Salesforce</li>
+              <li><i class="mono">AZ</i>Azure Data Factory</li>
+              <li><img src="assets/icons/vault.svg" alt="">HashiCorp Vault</li>
+              <li><i class="mono">BS</i>BrowserStack</li>
+              <li><i class="mono">LT</i>LambdaTest</li>
+            </ul>
+          </div>
+          <div class="group" style="--i:4">
+            <h3>Languages &amp; Data</h3>
+            <ul class="chips">
+              <li><img src="assets/icons/openjdk.svg" alt="">Java</li>
+              <li><img src="assets/icons/typescript.svg" alt="">TypeScript</li>
+              <li><img src="assets/icons/springboot.svg" alt="">Spring Boot</li>
+              <li><i class="mono">SQL</i>SQL Server</li>
+              <li><img src="assets/icons/mongodb.svg" alt="">MongoDB</li>
+              <li><img src="assets/icons/mysql.svg" alt="">MySQL</li>
+              <li><img src="assets/icons/oracle.svg" alt="">OracleDB</li>
+            </ul>
+          </div>
+          <div class="group" style="--i:5">
+            <h3>AI &amp; Management</h3>
+            <ul class="chips">
+              <li><img src="assets/icons/githubcopilot.svg" alt="">GitHub Copilot</li>
+              <li><i class="mono">MC</i>Microsoft Copilot</li>
+              <li><img src="assets/icons/googlegemini.svg" alt="">Gemini</li>
+              <li><img src="assets/icons/jira.svg" alt="">Jira &amp; Xray</li>
+              <li><i class="mono">AD</i>Azure DevOps</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+
+    <section id="work" class="section">
+      <header class="sec-head reveal">
+        <p class="eyebrow">Portfolio</p>
+        <h2>Open-source automation framework</h2>
+      </header>
+      <article class="window repo reveal">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">dwhytan / qa-automation-portfolio</span>
+        </div>
+        <div class="win-body repo-body">
+          <div class="repo-info">
+            <div class="repo-badges">
+              <span class="pill pill-live"><span class="status-dot" aria-hidden="true"></span>Live</span>
+              <span class="pill pill-ai">✦ AI-powered</span>
+              <span class="pill">31 tests</span>
+            </div>
+            <h3>qa-automation-portfolio</h3>
+            <p>End-to-end framework built with Playwright and TypeScript, running on GitHub Actions with Allure
+              reporting and Gemini-powered failure analysis. Page Object Model, three browsers, two mobile viewports.</p>
+            <ul class="chips chips-sm">
+              <li><i class="mono">PW</i>Playwright</li>
+              <li><img src="assets/icons/typescript.svg" alt="">TypeScript</li>
+              <li><img src="assets/icons/githubactions.svg" alt="">Actions</li>
+              <li><img src="assets/icons/googlegemini.svg" alt="">Gemini</li>
+              <li><i class="mono">AX</i>axe-core</li>
+            </ul>
+            <div class="cta">
+              <a class="btn btn-primary" href="https://dwhytan.github.io/qa-automation-portfolio" target="_blank" rel="noopener">Allure report <span aria-hidden="true">↗</span></a>
+              <a class="btn" href="https://github.com/dwhytan/qa-automation-portfolio" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <ul class="suites" aria-label="Test suites">
+            <li style="--i:0"><span class="pass" aria-hidden="true"></span>Login<em>3</em></li>
+            <li style="--i:1"><span class="pass" aria-hidden="true"></span>Checkout<em>3</em></li>
+            <li style="--i:2"><span class="pass" aria-hidden="true"></span>Inventory<em>3</em></li>
+            <li style="--i:3"><span class="pass" aria-hidden="true"></span>API<em>5</em></li>
+            <li style="--i:4"><span class="pass" aria-hidden="true"></span>Contract<em>4</em></li>
+            <li style="--i:5"><span class="pass" aria-hidden="true"></span>Accessibility · WCAG 2.0 AA<em>3</em></li>
+            <li style="--i:6"><span class="pass" aria-hidden="true"></span>Visual regression<em>3</em></li>
+            <li style="--i:7"><span class="pass" aria-hidden="true"></span>Mobile · iPhone 13, Pixel 5<em>3</em></li>
+            <li style="--i:8"><span class="pass" aria-hidden="true"></span>Performance · Core Web Vitals<em>3</em></li>
+            <li style="--i:9"><span class="pass ai" aria-hidden="true"></span>AI failure analysis<em>1</em></li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <!-- Certifications -->
+    <section id="certs" class="section">
+      <header class="sec-head reveal">
+        <p class="eyebrow">Certifications</p>
+        <h2>Verified knowledge</h2>
+      </header>
+      <ul class="certs">
+        <li class="cert glass reveal" style="--i:0"><img src="assets/badges/ctfl.png" alt="" width="48" height="48"><div><b>Foundation Level</b><span>ISTQB® CTFL</span></div></li>
+        <li class="cert glass reveal" style="--i:1"><img src="assets/badges/ctfl-at.png" alt="" width="48" height="48"><div><b>Agile Tester</b><span>ISTQB® CTFL-AT</span></div></li>
+        <li class="cert glass reveal" style="--i:2"><img src="assets/badges/ctal-tae.png" alt="" width="48" height="48"><div><b>Test Automation Engineering</b><span>ISTQB® CTAL-TAE 2.0</span></div></li>
+        <li class="cert glass reveal" style="--i:3"><img src="assets/badges/ct-ai.png" alt="" width="48" height="48"><div><b>AI Testing</b><span>ISTQB® CT-AI</span></div></li>
+        <li class="cert glass reveal" style="--i:4"><img src="assets/badges/sf-admin.png" alt="" width="48" height="48"><div><b>Platform Administrator</b><span>Salesforce</span></div></li>
+        <li class="cert glass reveal" style="--i:5"><img src="assets/badges/sf-associate.png" alt="" width="48" height="48"><div><b>Platform Foundations</b><span>Salesforce</span></div></li>
+        <li class="cert glass reveal" style="--i:6"><img src="assets/badges/sf-ai-associate.png" alt="" width="48" height="48"><div><b>AI Associate</b><span>Salesforce</span></div></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year">2026</span> Davis Huaytán · whydavis.me</p>
+  </footer>
+
+  <!-- Dock -->
+  <nav class="dock" aria-label="Quick navigation">
+    <a class="dock-item" href="#about" data-label="About" style="--g1:#8e86ff;--g2:#5b4fd6">
+      <svg viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+    </a>
+    <a class="dock-item" href="#stack" data-label="Stack" style="--g1:#6fb6ff;--g2:#3a6ed8">
+      <svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5"/></svg>
+    </a>
+    <a class="dock-item" href="#work" data-label="Portfolio" style="--g1:#5be3a0;--g2:#1f9e6a">
+      <svg viewBox="0 0 24 24"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
+    </a>
+    <a class="dock-item" href="#certs" data-label="Certifications" style="--g1:#f3a3d4;--g2:#b5508f">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></svg>
+    </a>
+    <span class="dock-sep" aria-hidden="true"></span>
+    <a class="dock-item ext" href="https://github.com/dwhytan" target="_blank" rel="noopener" data-label="GitHub" style="--g1:#3b3946;--g2:#1b1a22">
+      <svg viewBox="0 0 24 24" class="fill"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+    </a>
+    <a class="dock-item ext" href="https://www.linkedin.com/in/davis-huaytan" target="_blank" rel="noopener" data-label="LinkedIn" style="--g1:#3a8ee6;--g2:#0a5fb4">
+      <svg viewBox="0 0 24 24" class="fill"><path d="M6.94 8.5H3.56V20h3.38V8.5zM5.25 3a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92zM20.44 13.2c0-3.1-1.65-4.94-4.32-4.94-1.5 0-2.5.82-2.92 1.6V8.5H9.84V20h3.38v-6.2c0-1.47.66-2.5 1.96-2.5 1.2 0 1.88.85 1.88 2.5V20h3.38v-6.8z"/></svg>
+    </a>
+  </nav>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

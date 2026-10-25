@@ -195,14 +195,149 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 
 
 /* ───────── Stack ───────── */
-.stack-body { display: grid; gap: 28px; }
-.also { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px 28px; padding-top: 24px; border-top: 1px solid var(--stroke); }
-.chips-core li { height: 30px; padding: 0 12px 0 8px; font-size: 13.5px; }
-.chips-core img { width: 15px; height: 15px; }
-.group h3 {
-  font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--text-3); margin-bottom: 10px;
+/* Stack diagram: regions and blocks wired with elbow connectors (drawn in JS) */
+.stack-body { display: grid; gap: 12px; }
+.stack-body.win-body { padding-top: 20px; padding-bottom: 20px; }
+.diagram {
+  position: relative; display: grid; gap: 26px 30px; align-items: center;
+  grid-template-columns: 92px 1fr 1.1fr 1fr 1fr;
+  grid-template-areas:
+    "team plan ci   exec    sut"
+    "team code fw   exec    sut"
+    "team .    reports load sut";
+  padding: 6px 0 30px; /* bottom room for the return wire */
 }
+.zone {
+  grid-column: 2 / 4; grid-row: 1 / 3; align-self: stretch; margin: -14px -12px;
+  border: 1px dashed var(--stroke-2); border-radius: 16px; background: rgba(255, 255, 255, 0.02);
+  position: relative; pointer-events: none;
+}
+.zone span { position: absolute; top: -9px; left: 14px; padding: 0 6px; font: 400 11px/18px var(--mono); color: var(--text-3); background: #17161e; border-radius: 4px; }
+.wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; }
+.wires path { fill: none; stroke: rgba(255, 255, 255, 0.3); stroke-width: 1.25; stroke-linejoin: round; transition: stroke 200ms ease, opacity 200ms ease; }
+.wires path.on { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 5 5; animation: flow 900ms linear infinite; }
+.diagram.has-sel .wires path:not(.on) { opacity: 0.45; }
+@keyframes flow { to { stroke-dashoffset: -10; } }
+.dnode {
+  position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 10px 10px; border-radius: 12px; border: 1px solid var(--stroke-2);
+  background: rgba(24, 23, 32, 0.78); color: var(--text); font: inherit; text-align: center; cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, opacity 180ms ease, box-shadow 200ms ease;
+}
+.dnode:hover { border-color: rgba(255, 255, 255, 0.3); }
+.dnode:active { transform: scale(0.98); }
+.dnode b { font-size: 13.5px; font-weight: 600; }
+.dnode small { font: 400 11px/1.3 var(--mono); color: var(--text-3); }
+.dnode .icons { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 18px; margin-bottom: 4px; }
+.dnode .icons img { width: 15px; height: 15px; filter: var(--icon-filter); opacity: 0.85; }
+/* logos that only work in their own colors (or as a white silhouette) */
+.icons img.color, .chips img.color { filter: none; opacity: 1; border-radius: 3px; }
+.icons img.sil, .chips img.sil { filter: brightness(0) invert(1); opacity: 0.85; }
+.region-head .icons img { width: 15px; height: 15px; filter: var(--icon-filter); opacity: 0.85; }
+.team { border: 0; background: none; padding: 4px; }
+.team .people { width: 44px; height: 38px; fill: var(--accent); margin-bottom: 6px; }
+.hero-node { background: rgba(61, 220, 151, 0.08); border-color: color-mix(in srgb, var(--green) 45%, transparent); }
+.cmd {
+  margin-top: 8px; padding: 3px 7px; border-radius: 5px; white-space: nowrap;
+  font: 400 10.5px/1.4 var(--mono); color: var(--green); background: #0e0d13; border: 1px solid var(--stroke);
+}
+.region { align-self: stretch; justify-content: center; gap: 6px; background: rgba(168, 162, 255, 0.05); }
+.region > b, .region > small { margin-bottom: 2px; }
+.region > small { margin-bottom: 6px; }
+.sut { border-style: dashed; background: rgba(255, 255, 255, 0.02); }
+.card {
+  display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
+  padding: 7px 8px; border-radius: 8px; border: 1px solid var(--stroke); background: rgba(24, 23, 32, 0.7);
+  font-size: 12px; color: var(--text-2);
+}
+.card .icons { margin: 0; min-height: 0; gap: 4px; }
+.card .icons img { width: 13px; height: 13px; }
+.diagram.has-sel [data-node] { opacity: 0.5; }
+.diagram.has-sel [data-node].linked { opacity: 1; }
+.diagram.has-sel [data-node].selected {
+  opacity: 1; border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent), 0 10px 30px -12px rgba(168, 162, 255, 0.45);
+}
+.diagram.has-sel .team.selected { box-shadow: none; }
+/* Stack: blueprint look (grid paper, square blocks with corner marks, mono labels,
+   dotted cyan wires) so it never reads as a copy of the Portfolio diagram */
+.diagram--stack {
+  --bp: #7cc8e8;
+  padding: 16px 14px 34px; border-radius: 14px; border: 1px solid var(--stroke);
+  background-color: rgba(10, 9, 14, 0.35);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.diagram--stack .dnode { border-radius: 4px; border-color: rgba(255, 255, 255, 0.14); background: rgba(14, 13, 19, 0.85); }
+.diagram--stack .dnode::before, .diagram--stack .dnode::after {
+  content: ""; position: absolute; width: 8px; height: 8px; opacity: 0.55; transition: opacity 180ms ease;
+}
+.diagram--stack .dnode::before { top: -1px; left: -1px; border-top: 2px solid var(--bp); border-left: 2px solid var(--bp); }
+.diagram--stack .dnode::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--bp); border-right: 2px solid var(--bp); }
+.diagram--stack .dnode.selected::before, .diagram--stack .dnode.selected::after { opacity: 1; }
+.diagram--stack .team { background: none; }
+.diagram--stack .team::before, .diagram--stack .team::after { content: none; }
+.diagram--stack .team .people { fill: var(--bp); }
+.diagram--stack .dnode b { font: 500 11.5px/1.3 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+.diagram--stack .dnode small { font-family: var(--sans); font-size: 11.5px; }
+.diagram--stack .region { background: rgba(124, 200, 232, 0.035); }
+.diagram--stack .card { border-radius: 3px; font: 400 11.5px/1.3 var(--mono); background: rgba(14, 13, 19, 0.9); }
+.diagram--stack .hero-node { background: rgba(124, 200, 232, 0.08); border-color: color-mix(in srgb, var(--bp) 45%, transparent); }
+.diagram--stack .cmd { color: var(--bp); border-radius: 3px; }
+.diagram--stack .zone { border-color: color-mix(in srgb, var(--bp) 30%, transparent); border-radius: 6px; }
+.diagram--stack .zone span { color: var(--bp); background: #121118; text-transform: uppercase; letter-spacing: 0.08em; }
+.diagram--stack .wires path { stroke: rgba(255, 255, 255, 0.32); stroke-dasharray: 1 5; stroke-linecap: round; stroke-width: 1.6; }
+.diagram--stack .wires path.on { stroke: var(--bp); stroke-width: 2; stroke-dasharray: 1 5; animation: flow-dots 700ms linear infinite; }
+@keyframes flow-dots { to { stroke-dashoffset: -6; } }
+.diagram--stack.has-sel [data-node].selected {
+  border-color: var(--bp); box-shadow: 0 0 0 3px color-mix(in srgb, var(--bp) 18%, transparent);
+}
+.diagram--stack.has-sel .team.selected { box-shadow: none; }
+
+/* Portfolio: the repo's own architecture, same engine as the stack diagram */
+.diagram--repo {
+  row-gap: 18px;
+  grid-template-columns: 84px 0.9fr 0.9fr 2fr 0.9fr;
+  grid-template-areas:
+    "dev repo ci suite  apps"
+    "dev .    ai report apps";
+}
+.dregion {
+  position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 8px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--green) 40%, transparent);
+  background: rgba(61, 220, 151, 0.06);
+}
+.region-head {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 10px; border: 1px solid transparent;
+  border-radius: 10px; background: none; color: var(--text); font: inherit; cursor: pointer;
+  transition: opacity 180ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+.region-head b { font-size: 13.5px; font-weight: 600; }
+.region-head small { font: 400 11px/1.3 var(--mono); color: var(--text-3); }
+.region-head .icons { display: flex; margin-bottom: 4px; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: 100%; }
+button.card { font: inherit; font-size: 12px; cursor: pointer; transition: opacity 180ms ease, border-color 150ms ease, background-color 150ms ease; }
+button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); }
+.diagram--repo .card { flex-wrap: wrap; }
+.card em { flex-basis: 100%; font: 400 10.5px/1.3 var(--mono); font-style: normal; color: var(--text-3); }
+.diagram.has-sel .region-head.selected, .diagram.has-sel button.card.selected {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); border-color: var(--accent); color: var(--text);
+}
+.inline-link { color: var(--accent); white-space: nowrap; }
+.inline-link:hover { text-decoration: underline; }
+.arch-detail {
+  min-height: 72px; padding: 12px 16px; border-radius: 12px;
+  background: var(--glass-hi); border: 1px solid var(--stroke); font-size: 14px; color: var(--text-2);
+}
+.arch-detail > * { animation: panel-in 220ms var(--ease-out); }
+.arch-detail .head b { color: var(--text); font-weight: 600; }
+.arch-detail .head span { margin-left: 8px; font: 400 11.5px/1 var(--mono); color: var(--accent); }
+.arch-detail p { margin-top: 4px; }
+.arch-detail ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 22px; margin-top: 8px; }
+.arch-detail li { font-size: 12.5px; line-height: 1.4; }
+.arch-detail li b { color: var(--text); font-weight: 600; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chips li {
   display: inline-flex; align-items: center; gap: 6px;
@@ -213,11 +348,6 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 }
 .chips li:hover { border-color: var(--green); background: var(--green-soft); transform: translateY(-1px); }
 .chips img { width: 13px; height: 13px; filter: var(--icon-filter); opacity: 0.82; }
-.chips .mono {
-  display: inline-grid; place-items: center; min-width: 15px; height: 15px; padding: 0 2px;
-  border-radius: 4px; font: 700 7.5px/1 var(--mono); font-style: normal; letter-spacing: 0;
-  color: var(--bg); background: var(--text-2);
-}
 .chips-sm li { height: 24px; font-size: 12px; }
 
 
@@ -226,65 +356,10 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 .repo-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
 .repo-head .cta { margin-top: 0; flex: none; }
 .repo-lede { font-size: 16px; color: var(--text); max-width: 74ch; }
-.repo-targets { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin-top: 10px; font-size: 13.5px; }
-.repo-targets span { color: var(--text-3); }
-.repo-targets a { color: var(--text); text-decoration: underline; text-decoration-color: var(--stroke-2); text-underline-offset: 3px; }
-.repo-targets a:hover { text-decoration-color: var(--accent); }
-.repo-targets em { font-style: normal; color: var(--text-3); margin-right: 8px; }
 .btn .status-dot { width: 7px; height: 7px; }
-.built { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.repo .built h3 { margin: 0; }
 .repo h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 12px; }
 .hint { margin-left: 6px; font: 400 11px/1 var(--mono); text-transform: none; letter-spacing: 0; color: var(--text-3); opacity: 0.8; }
 
-/* Pipeline: five steps on a line that fills as the run advances */
-.flow-steps {
-  --p: 0;
-  position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
-}
-.flow-steps::before, .flow-steps::after {
-  content: ""; position: absolute; top: 25px; left: 10%; height: 2px; border-radius: 2px; pointer-events: none;
-}
-.flow-steps::before { right: 10%; background: var(--stroke-2); }
-.flow-steps::after {
-  width: calc(var(--p) * 80%);
-  background: linear-gradient(90deg, var(--accent), var(--green));
-  transition: width 500ms var(--ease-in-out);
-}
-.step {
-  position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 8px 6px 10px; border: 1px solid transparent; border-radius: 12px;
-  background: none; color: var(--text-2); font: inherit; text-align: center; cursor: pointer;
-  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
-}
-.step .n {
-  display: grid; place-items: center; width: 30px; height: 30px; margin-bottom: 6px; border-radius: 50%;
-  font: 500 11px/1 var(--mono); color: var(--text-2);
-  background: #1b1a23; border: 1px solid var(--stroke-2);
-  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
-}
-.step b { font-size: 13.5px; font-weight: 600; color: var(--text); }
-.step small { font: 400 11.5px/1.3 var(--mono); color: var(--text-3); }
-.step:hover { background: var(--glass-hi); }
-.step.done .n { border-color: color-mix(in srgb, var(--accent) 60%, transparent); color: var(--accent); }
-.step[aria-selected="true"] { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
-.step[aria-selected="true"] .n { background: var(--accent); border-color: var(--accent); color: #16151c; }
-.step:active { transform: scale(0.97); }
-.flow-panel {
-  margin-top: 8px; min-height: 72px; padding: 12px 16px; border-radius: 12px;
-  background: var(--glass-hi); border: 1px solid var(--stroke);
-  font-size: 14.5px; color: var(--text-2);
-}
-.flow-panel b { color: var(--text); font-weight: 600; }
-.flow-panel p { animation: panel-in 260ms var(--ease-out); }
-@keyframes panel-in { from { opacity: 0; transform: translateY(4px); } }
-
-/* What it checks: plain-language questions, test names underneath */
-.checks ul { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 28px; }
-.checks li { display: flex; align-items: baseline; gap: 10px; padding: 4px 0; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--stroke); }
-.checks li > span:last-child { display: flex; flex: 1; align-items: baseline; justify-content: space-between; gap: 12px; }
-.checks li .pass { align-self: center; }
-.checks small { flex: none; font: 400 11.5px/1.4 var(--mono); color: var(--text-3); }
 .pass { width: 14px; height: 14px; border-radius: 50%; flex: none; position: relative; background: var(--green-soft); }
 .pass::after {
   content: ""; position: absolute; left: 4.5px; top: 2.5px; width: 3.5px; height: 6.5px;
@@ -351,12 +426,6 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
   transition-delay: calc(var(--i, 0) * 70ms);
 }
 .js .reveal.in { opacity: 1; transform: none; }
-.js .reveal .group, .js .reveal .checks li {
-  opacity: 0; transform: translateY(8px);
-  transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
-  transition-delay: calc(200ms + var(--i, 0) * 55ms);
-}
-.js .reveal.in .group, .js .reveal.in .checks li { opacity: 1; transform: none; }
 
 /* ───────── Section snapping ─────────
    On large screens each section fills the viewport and the page settles on it,
@@ -394,19 +463,23 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 
 /* ───────── Responsive ───────── */
 @media (max-width: 900px) {
+  .diagram {
+    grid-template-columns: minmax(0, 1fr); gap: 26px; padding-bottom: 0; max-width: 420px; margin: 0 auto; width: 100%;
+    grid-template-areas: "team" "plan" "code" "ci" "fw" "exec" "load" "sut" "reports";
+  }
+  .zone { display: none; }
+  .diagram--repo { grid-template-areas: "dev" "repo" "ci" "suite" "apps" "ai" "report"; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .arch-detail ul { grid-template-columns: minmax(0, 1fr); }
+  .arch-detail {
+    position: sticky; bottom: 84px; z-index: 2;
+    background: rgba(18, 17, 24, 0.92); border-color: var(--stroke-2);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
+  }
   .repo-head { flex-direction: column; }
 }
 @media (max-width: 640px) {
-  /* pipeline turns vertical: number on the left, line runs down */
-  .flow-steps { grid-template-columns: 1fr; gap: 2px; }
-  .flow-steps::before, .flow-steps::after { top: 22px; left: 26px; right: auto; width: 2px; height: auto; }
-  .flow-steps::before { bottom: 22px; }
-  .flow-steps::after { height: calc(var(--p) * (100% - 44px)); width: 2px; transition: height 500ms var(--ease-in-out); }
-  .step { flex-direction: row; align-items: center; gap: 10px; padding: 6px 10px; text-align: left; }
-  .step .n { margin-bottom: 0; flex: none; }
-  .step small { margin-left: auto; }
-  .flow-panel { min-height: 120px; }
-  .checks ul { grid-template-columns: 1fr; }
   /* badges stay on one line; the caption drops below them */
   .badges { gap: 4px; }
   .badge-caption { flex-basis: 100%; white-space: normal; }
@@ -414,7 +487,6 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
   .badge-sep { margin: 0 4px; }
   .mb-nav { display: none; }
   .win-body { padding: 20px; }
-  .also { grid-template-columns: 1fr; }
   .section { padding: 40px 0; }
   .dock { gap: 4px; padding: 6px; border-radius: 18px; }
   .dock-item { width: 40px; height: 40px; border-radius: 10px; }
@@ -424,5 +496,4 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; transition-delay: 0ms !important; }
-  .js .reveal, .js .reveal .group, .js .reveal .checks li { opacity: 1; transform: none; filter: none; }
-}
+  .js .reveal, }

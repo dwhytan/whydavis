@@ -202,54 +202,212 @@
   }, { rootMargin: "-45% 0px -50% 0px" });
   document.querySelectorAll("main .section").forEach((s) => sectionIO.observe(s));
 
-  /* ── Pipeline diagram: tabs that explain each step; plays through once when
-        it scrolls into view, and stops as soon as the visitor picks a step ── */
-  const flow = document.querySelector(".flow-steps");
-  if (flow) {
-    const steps = [...flow.querySelectorAll(".step")];
-    const panel = document.getElementById("flow-panel");
-    const texts = [...panel.querySelectorAll("template")].map((t) => t.innerHTML);
-    let current = 0, timer = null;
+  /* ── Diagrams: blocks wired with elbow connectors. Selecting a block lights its
+        wires and explains it in the panel underneath. Used by Stack and Portfolio. ── */
+  const wireDiagram = (root, detail, { nodes, wires, order, pinned, markers = ["ah", "ah-on"] }) => {
+    const svgG = root.querySelector(".wire-paths");
+    const blocks = [...root.querySelectorAll("[data-node]")];
+    // Wires attach to [data-wire] (a region) or to the block itself.
+    const anchor = (id) => root.querySelector(`[data-wire="${id}"]`) || root.querySelector(`[data-node="${id}"]`);
+    const wireOf = (id) => root.querySelector(`[data-node="${id}"]`).closest("[data-wire]")?.dataset.wire || id;
+    const narrow = matchMedia("(max-width: 900px)");
+    // In the single-column layout every block sits under the previous one,
+    // so only consecutive steps are wired.
+    const wiresNow = () => (narrow.matches ? order.slice(1).map((n, k) => [order[k], n]) : wires);
+    let shown = null;
 
-    const select = (i, focus = false) => {
-      current = i;
-      steps.forEach((s, k) => {
-        const on = k === i;
-        s.setAttribute("aria-selected", on);
-        s.tabIndex = on ? 0 : -1;
-        s.classList.toggle("done", k <= i);
-      });
-      flow.style.setProperty("--p", i / (steps.length - 1));
-      panel.setAttribute("aria-labelledby", steps[i].id);
-      panel.innerHTML = texts[i];
-      if (focus) steps[i].focus();
-    };
-    const stop = () => { clearInterval(timer); timer = null; };
-
-    steps.forEach((s, i) => s.addEventListener("click", () => { stop(); select(i); }));
-    flow.addEventListener("keydown", (e) => {
-      const keys = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
-      if (e.key in keys) {
-        e.preventDefault(); stop();
-        select((current + keys[e.key] + steps.length) % steps.length, true);
-      } else if (e.key === "Home" || e.key === "End") {
-        e.preventDefault(); stop();
-        select(e.key === "Home" ? 0 : steps.length - 1, true);
+    // Polyline through points with rounded corners.
+    const rounded = (pts, r = 10) => {
+      pts = pts.filter((p, k) => k === 0 || p[0] !== pts[k - 1][0] || p[1] !== pts[k - 1][1]);
+      let d = `M${pts[0][0]},${pts[0][1]}`;
+      for (let k = 1; k < pts.length - 1; k++) {
+        const [px, py] = pts[k - 1], [cx, cy] = pts[k], [nx, ny] = pts[k + 1];
+        const r1 = Math.min(r, Math.hypot(cx - px, cy - py) / 2), r2 = Math.min(r, Math.hypot(nx - cx, ny - cy) / 2);
+        const a = [cx - Math.sign(cx - px) * r1, cy - Math.sign(cy - py) * r1];
+        const b = [cx + Math.sign(nx - cx) * r2, cy + Math.sign(ny - cy) * r2];
+        d += ` L${a[0]},${a[1]} Q${cx},${cy} ${b[0]},${b[1]}`;
       }
-    });
-    select(0);
+      const last = pts[pts.length - 1];
+      return d + ` L${last[0]},${last[1]}`;
+    };
 
-    if (!reduced) {
-      const playIO = new IntersectionObserver(([entry]) => {
-        if (!entry.isIntersecting) return;
-        playIO.disconnect();
-        timer = setInterval(() => {
-          if (current === steps.length - 1) return stop();
-          select(current + 1);
-        }, 3200);
-      }, { threshold: 0.6 });
-      playIO.observe(flow);
-    }
+    const route = (from, to, kind) => {
+      const box = root.getBoundingClientRect();
+      const L = (el) => {
+        const r = el.getBoundingClientRect();
+        return { l: r.left - box.left, r: r.right - box.left, t: r.top - box.top, b: r.bottom - box.top, cx: r.left + r.width / 2 - box.left, cy: r.top + r.height / 2 - box.top };
+      };
+      const A = L(anchor(from)), B = L(anchor(to)), gap = 3;
+      if (kind === "loop") {
+        const y = box.height - 8;
+        return rounded([[A.cx, A.b + gap], [A.cx, y], [B.cx, y], [B.cx, B.b + gap]], 14);
+      }
+      if (B.l >= A.r - 2) {                                   // target to the right
+        const y1 = Math.max(A.t + 14, Math.min(A.b - 14, B.cy));
+        const y2 = Math.max(B.t + 14, Math.min(B.b - 14, y1));
+        const xm = (A.r + B.l) / 2;
+        return rounded([[A.r + gap, y1], [xm, y1], [xm, y2], [B.l - gap - 2, y2]]);
+      }
+      if (B.t >= A.b - 2) {                                   // target below
+        const x1 = Math.max(A.l + 14, Math.min(A.r - 14, B.cx));
+        const x2 = Math.max(B.l + 14, Math.min(B.r - 14, x1));
+        const ym = (A.b + B.t) / 2;
+        return rounded([[x1, A.b + gap], [x1, ym], [x2, ym], [x2, B.t - gap - 2]]);
+      }
+      const ym = (A.t + B.b) / 2;                             // target above
+      return rounded([[A.cx, A.t - gap], [A.cx, ym], [B.cx, ym], [B.cx, B.b + gap + 2]]);
+    };
+
+    const draw = () => {
+      const lit = shown && wireOf(shown);
+      svgG.innerHTML = wiresNow().map(([f, t, kind]) => {
+        const on = lit && (f === lit || t === lit);
+        return `<path class="${on ? "on" : ""}" d="${route(f, t, kind)}" marker-end="url(#${markers[on ? 1 : 0]})"/>`;
+      }).join("");
+    };
+
+    const show = (id) => {
+      if (id === shown) return;
+      shown = id;
+      const w = wireOf(id);
+      const linked = new Set(wiresNow().flatMap(([f, t]) => (f === w ? [t] : t === w ? [f] : [])));
+      if (w !== id) linked.add(w);
+      root.classList.add("has-sel");
+      blocks.forEach((b) => {
+        const n = b.dataset.node;
+        b.classList.toggle("selected", n === id);
+        const region = b.closest("[data-wire]")?.dataset.wire;
+        // Blocks inside a selected region count as part of it.
+        b.classList.toggle("linked", linked.has(n) || linked.has(region) || (region === w && n !== id));
+        b.setAttribute("aria-pressed", n === pinned);
+      });
+      const [title, text, items = []] = nodes[id];
+      const list = items.map(([name, desc]) => `<li><b>${name}</b> · ${desc}</li>`).join("");
+      detail.innerHTML = `<div><p class="head"><b>${title}</b></p><p>${text}</p>${list ? `<ul>${list}</ul>` : ""}</div>`;
+      draw();
+    };
+
+    // Reserve the tallest explanation so the diagram never jumps while hovering
+    // (desktop only; on narrow screens the panel floats and sizes to its content).
+    const reserveDetail = () => {
+      detail.style.minHeight = "";
+      if (narrow.matches) return;
+      let max = 0;
+      for (const id of Object.keys(nodes)) { shown = null; show(id); max = Math.max(max, detail.offsetHeight); }
+      detail.style.minHeight = max + "px";
+      shown = null;
+      show(pinned);
+    };
+
+    blocks.forEach((b) => {
+      const id = b.dataset.node;
+      b.addEventListener("click", () => { pinned = id; shown = null; show(id); });
+      b.addEventListener("focus", () => { if (b.matches(":focus-visible")) { pinned = id; show(id); } });
+      b.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") show(id); });
+    });
+    root.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") show(pinned); });
+
+    show(pinned);
+    reserveDetail();
+    // Wires follow the layout: after the window finishes opening, on resize and once fonts load.
+    root.closest(".window").addEventListener("transitionend", draw);
+    let wireTimer;
+    addEventListener("resize", () => { clearTimeout(wireTimer); wireTimer = setTimeout(() => { reserveDetail(); draw(); }, 120); });
+    document.fonts?.ready.then(() => { reserveDetail(); draw(); });
+  };
+
+  const stackDiagram = document.getElementById("diagram");
+  if (stackDiagram) {
+    const TOOLS = {
+      jira: ["Jira & Xray", "Test plans, cases and defects. Xray links every test to the requirement it covers."],
+      "azure-devops": ["Azure DevOps", "Requirement traceability, test runs and defect tracking."],
+      cucumber: ["Cucumber · BDD", "Gherkin scenarios that business, dev and QA agree on before any code is written."],
+      serenity: ["Serenity BDD · Screenplay", "My main framework. The Screenplay pattern keeps web and API tests readable and reusable as suites grow."],
+      playwright: ["Playwright", "Fast cross-browser web tests in TypeScript. It powers the portfolio project below."],
+      selenium: ["Selenium", "Browser automation for web apps, also used under the hood by Serenity."],
+      cypress: ["Cypress", "Front-end tests for JavaScript web apps."],
+      appium: ["Appium", "Tests for native mobile apps on Android and iOS."],
+      restassured: ["RestAssured", "API tests in Java: REST services, authentication flows and response data."],
+      karate: ["Karate DSL", "API tests in a readable syntax that non-developers can review."],
+      postman: ["Postman", "Exploring REST and SOAP APIs before automating them."],
+      testcontainers: ["TestContainers", "Throwaway databases and services in Docker, so tests don't share state."],
+      java: ["Java", "Main language for frameworks, internal tools and test data utilities."],
+      typescript: ["TypeScript", "Language for Playwright and Cypress suites."],
+      springboot: ["Spring Boot", "Internal tools and service simulators for test environments."],
+      copilot: ["GitHub Copilot", "Speeds up writing test code and analysing requirements."],
+      jenkins: ["Jenkins", "Pipelines that build, test and deploy on every change."],
+      "github-actions": ["GitHub Actions", "CI for GitHub repositories, including the portfolio suite."],
+      gitlab: ["GitLab CI", "CI pipelines for GitLab projects."],
+      docker: ["Docker", "The same environment locally, in CI and in the cloud."],
+      browserstack: ["BrowserStack", "Real devices and browsers in the cloud."],
+      lambdatest: ["LambdaTest", "Cloud grid for cross-browser runs."],
+      vault: ["HashiCorp Vault", "Secrets and certificates for test runs, never hard-coded."],
+      "gh-secrets": ["GitHub Secrets", "Encrypted keys for CI runs, injected at run time and never stored in the code. The portfolio suite keeps its Gemini API key here."],
+      salesforce: ["Salesforce", "CRM platform under test: UI, APIs and data, including certificate-based (JWT) login for automation."],
+      sqlserver: ["SQL Server", "Checking that what the screen shows is what was actually stored."],
+      mongodb: ["MongoDB", "Test data setup and checks for NoSQL-backed services."],
+      oracle: ["OracleDB", "Data validation in enterprise databases."],
+      adf: ["Azure Data Factory", "Testing ETL pipelines: file integrity, transformation rules and loads into Salesforce."],
+      jmeter: ["JMeter", "Load, stress and spike tests on microservices."],
+      loadrunner: ["LoadRunner", "Enterprise load testing."],
+      k6: ["k6", "Scripted load tests that can run in CI."],
+      zap: ["OWASP ZAP", "Automated security scans before a release reaches production."],
+      burp: ["Burp Suite", "Hands-on security testing of web apps and APIs."],
+      allure: ["Allure Report", "Readable test reports with steps, screenshots, video and traces."],
+    };
+    const T = (ids) => ids.map((t) => TOOLS[t]);
+    wireDiagram(stackDiagram, document.getElementById("arch-detail"), {
+      pinned: "fw",
+      markers: ["dot", "dot-on"],
+      nodes: {
+        team: ["QA and dev team", "Where every test starts: a risk, a requirement or a bug worth never seeing again."],
+        plan: ["Plan", "Decide what to test and agree on it before code exists.", T(["jira", "azure-devops", "cucumber"])],
+        code: ["Code", "Write tests and tooling, with AI assistance where it helps.", T(["java", "typescript", "springboot", "copilot"])],
+        ci: ["CI pipeline", "Every change triggers the suites automatically.", T(["jenkins", "github-actions", "gitlab"])],
+        fw: ["Test framework", "The automation itself: UI, API and mobile tests.", T(["serenity", "playwright", "restassured", "karate", "selenium", "cypress", "appium"])],
+        exec: ["Execution", "Where the tests actually run.", T(["docker", "testcontainers", "browserstack", "lambdatest", "vault", "gh-secrets"])],
+        load: ["Load and security", "How the system behaves under pressure and under attack.", T(["jmeter", "loadrunner", "k6", "zap", "burp"])],
+        sut: ["Systems under test", "What gets checked: front ends, services and the data behind them.", T(["postman", "salesforce", "sqlserver", "mongodb", "oracle", "adf"])],
+        reports: ["Reports", "Evidence the team can read: what passed, what failed and why.", T(["allure", "jira"])],
+      },
+      // [from, to, kind] — kind "loop" runs along the bottom back to the start.
+      wires: [
+        ["team", "plan"], ["team", "code"], ["plan", "code"],
+        ["code", "fw"], ["ci", "fw"], ["fw", "exec"], ["exec", "sut"],
+        ["load", "sut"], ["fw", "reports"], ["reports", "team", "loop"],
+      ],
+      order: ["team", "plan", "code", "ci", "fw", "exec", "load", "sut", "reports"],
+    });
+  }
+
+  const repoDiagram = document.getElementById("repo-diagram");
+  if (repoDiagram) {
+    wireDiagram(repoDiagram, document.getElementById("repo-detail"), {
+      pinned: "suite",
+      nodes: {
+        dev: ["A code change", "Someone pushes to GitHub. Nobody presses \"run\": everything after this is automatic."],
+        repo: ["GitHub repository", "Tests, page objects and configuration live here, in TypeScript. Every push or pull request starts a run."],
+        ci: ["GitHub Actions", "A clean Ubuntu machine installs everything from scratch, so results never depend on one laptop. Flaky tests get two retries, and the Gemini API key comes from GitHub Secrets."],
+        suite: ["Playwright · 31 tests", "Every test runs in Chromium, Firefox and WebKit (Safari) and records a screenshot, a video and a trace. Select a group to see what it checks."],
+        ui: ["Shopping flows · 9 tests", "Can people log in, browse and sort products, add to the cart and complete a purchase? Wrong passwords must be rejected."],
+        api: ["API and contract · 9 tests", "Does PokeAPI return the right data and errors, and keep the fields and types that apps built on it rely on?"],
+        a11y: ["Accessibility · 3 tests", "Can people using screen readers or a keyboard use the shop? Checked against WCAG 2.0 A and AA with axe-core."],
+        visual: ["Visual regression · 3 tests", "Does every page still look like its approved screenshot? A change of more than 2% of pixels fails."],
+        mobile: ["Mobile · 3 tests", "Does the shop work on iPhone 13 and Pixel 5 screens, not only on desktop?"],
+        perf: ["Performance · 3 tests", "Does it load fast enough? First and largest paint (Core Web Vitals) and page load times are checked against budgets."],
+        apps: ["Applications under test", "Public demo targets, so anyone can rerun the suite and get the same results.", [
+          ["Sauce Demo", "a practice online store built for testing"],
+          ["PokeAPI", "a free public REST API"],
+        ]],
+        ai: ["Gemini AI review · 1 test", "A demo of AI-assisted triage: a known login failure is sent to Google Gemini, which answers with the likely root cause, a fix and how to prevent it."],
+        report: ["Allure report", "Published to GitHub Pages after every run, with screenshots, video and traces anyone can open. <a class=\"inline-link\" href=\"https://dwhytan.github.io/qa-automation-portfolio\" target=\"_blank\" rel=\"noopener\">Open the live report ↗</a>"],
+      },
+      wires: [
+        ["dev", "repo"], ["repo", "ci"], ["ci", "suite"], ["suite", "apps"],
+        ["suite", "ai"], ["suite", "report"], ["report", "dev", "loop"],
+      ],
+      order: ["dev", "repo", "ci", "suite", "apps", "ai", "report"],
+    });
   }
 
   /* ── Badges: name the badge in the caption beside the row. Mouse: hover only,

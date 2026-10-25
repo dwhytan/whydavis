@@ -77,79 +77,72 @@
     <section id="stack" class="section">
       <header class="sec-head reveal">
         <p class="eyebrow">Stack</p>
-        <h2>What I build with</h2>
+        <h2>How my stack fits together</h2>
       </header>
       <article class="window reveal">
         <div class="titlebar">
           <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="title">Stack</span>
+          <span class="title">Stack · select a block</span>
         </div>
         <div class="win-body stack-body">
-          <div class="group core" style="--i:0">
-            <h3>Core</h3>
-            <ul class="chips chips-core">
-              <li><i class="mono">SB</i>Serenity BDD · Screenplay</li>
-              <li><i class="mono">PW</i>Playwright</li>
-              <li><i class="mono">RA</i>RestAssured</li>
-              <li><i class="mono">KD</i>Karate DSL</li>
-              <li><img src="assets/icons/openjdk.svg" alt="">Java</li>
-              <li><img src="assets/icons/salesforce.svg" alt="">Salesforce</li>
-              <li><img src="assets/icons/apachejmeter.svg" alt="">JMeter</li>
-              <li><img src="assets/icons/jenkins.svg" alt="">Jenkins</li>
-              <li><img src="assets/icons/githubactions.svg" alt="">GitHub Actions</li>
-            </ul>
+          <div class="diagram diagram--stack" id="diagram">
+            <svg class="wires" aria-hidden="true">
+              <defs>
+                <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                <marker id="ah-on" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#a8a2ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6"><circle cx="5" cy="5" r="3" fill="rgba(255,255,255,.4)"/></marker>
+                <marker id="dot-on" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7"><circle cx="5" cy="5" r="3.2" fill="#7cc8e8"/></marker>
+              </defs>
+              <g class="wire-paths"></g>
+            </svg>
+            <div class="zone" aria-hidden="true"><span>Build and run</span></div>
+            <button class="dnode team" type="button" data-node="team" style="grid-area:team">
+              <svg class="people" viewBox="0 0 48 40" aria-hidden="true"><circle cx="24" cy="11" r="7"/><path d="M11 36c0-8 6-13 13-13s13 5 13 13z"/><circle cx="9" cy="15" r="5" opacity=".55"/><path d="M0 34c0-6 4-9 9-9 2 0 4 .5 5.5 1.5-2.5 2.5-4 5.5-4.5 9.5z" opacity=".55"/><circle cx="39" cy="15" r="5" opacity=".55"/><path d="M48 34c0-6-4-9-9-9-2 0-4 .5-5.5 1.5 2.5 2.5 4 5.5 4.5 9.5z" opacity=".55"/></svg>
+              <b>QA and dev team</b><small>where it starts</small>
+            </button>
+            <button class="dnode" type="button" data-node="plan" style="grid-area:plan">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/jira.svg" alt=""><img src="assets/icons/azuredevops.svg" alt=""><img src="assets/icons/cucumber.svg" alt=""></span>
+              <b>Plan</b><small>what to test</small>
+            </button>
+            <button class="dnode" type="button" data-node="code" style="grid-area:code">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/openjdk.svg" alt=""><img src="assets/icons/typescript.svg" alt=""><img src="assets/icons/springboot.svg" alt=""><img src="assets/icons/githubcopilot.svg" alt=""></span>
+              <b>Code</b><small>IDE and AI assist</small>
+            </button>
+            <button class="dnode" type="button" data-node="ci" style="grid-area:ci">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/jenkins.svg" alt=""><img src="assets/icons/githubactions.svg" alt=""><img src="assets/icons/gitlab.svg" alt=""></span>
+              <b>CI pipeline</b><small>on every change</small>
+            </button>
+            <button class="dnode hero-node" type="button" data-node="fw" style="grid-area:fw">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/serenity.png" alt="" class="sil"><img src="assets/icons/playwright.svg" alt=""><img src="assets/icons/restassured.png" alt="" class="sil"><img src="assets/icons/karate.svg" alt=""><img src="assets/icons/selenium.svg" alt=""><img src="assets/icons/appium.svg" alt=""></span>
+              <b>Test framework</b><small>UI · API · mobile</small><code class="cmd">mvn verify · npx playwright test</code>
+            </button>
+            <button class="dnode" type="button" data-node="load" style="grid-area:load">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/apachejmeter.svg" alt=""><img src="assets/icons/loadrunner.png" alt="" class="color"><img src="assets/icons/k6.svg" alt=""><img src="assets/icons/owasp.svg" alt=""><img src="assets/icons/burpsuite.svg" alt=""></span>
+              <b>Load and security</b><small>performance · OWASP</small>
+            </button>
+            <button class="dnode region" type="button" data-node="exec" style="grid-area:exec">
+              <b>Execution</b><small>where tests run</small>
+              <span class="card"><span class="icons" aria-hidden="true"><img src="assets/icons/docker.svg" alt=""><img src="assets/icons/testcontainers.svg" alt="" class="color"></span>Containers</span>
+              <span class="card"><span class="icons" aria-hidden="true"><img src="assets/icons/browserstack.svg" alt="" class="color"><img src="assets/icons/lambdatest.png" alt="" class="sil"></span>Real browsers and devices</span>
+              <span class="card"><span class="icons" aria-hidden="true"><img src="assets/icons/vault.svg" alt=""><img src="assets/icons/github.svg" alt=""></span>Secrets</span>
+            </button>
+            <button class="dnode" type="button" data-node="reports" style="grid-area:reports">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/allure.png" alt="" class="color"><img src="assets/icons/jira.svg" alt=""></span>
+              <b>Reports</b><small>evidence for the team</small>
+            </button>
+            <button class="dnode region sut" type="button" data-node="sut" style="grid-area:sut">
+              <b>Systems under test</b><small>hosted anywhere</small>
+              <span class="card"><span class="icons" aria-hidden="true"></span>Web and mobile apps</span>
+              <span class="card"><span class="icons" aria-hidden="true"><img src="assets/icons/postman.svg" alt=""></span>REST and SOAP APIs</span>
+              <span class="card"><span class="icons" aria-hidden="true"><img src="assets/icons/salesforce.svg" alt=""></span>Salesforce</span>
+              <span class="card"><span class="icons" aria-hidden="true"><img src="assets/icons/sqlserver.svg" alt=""><img src="assets/icons/mongodb.svg" alt=""><img src="assets/icons/oracle.svg" alt=""></span>Databases</span>
+              <span class="card"><span class="icons" aria-hidden="true"><img src="assets/icons/azure.svg" alt=""></span>ETL pipelines</span>
+            </button>
           </div>
-          <div class="also">
-            <div class="group" style="--i:1">
-              <h3>Also: testing</h3>
-              <ul class="chips chips-sm">
-                <li><img src="assets/icons/selenium.svg" alt="">Selenium</li>
-                <li><img src="assets/icons/cypress.svg" alt="">Cypress</li>
-                <li><img src="assets/icons/appium.svg" alt="">Appium</li>
-                <li><img src="assets/icons/cucumber.svg" alt="">Cucumber</li>
-                <li><img src="assets/icons/postman.svg" alt="">Postman</li>
-                <li><i class="mono">TC</i>TestContainers</li>
-              </ul>
-            </div>
-            <div class="group" style="--i:2">
-              <h3>Also: performance and security</h3>
-              <ul class="chips chips-sm">
-                <li><i class="mono">LR</i>LoadRunner</li>
-                <li><img src="assets/icons/k6.svg" alt="">k6</li>
-                <li><img src="assets/icons/owasp.svg" alt="">OWASP ZAP</li>
-                <li><img src="assets/icons/burpsuite.svg" alt="">Burp Suite</li>
-              </ul>
-            </div>
-            <div class="group" style="--i:3">
-              <h3>Also: delivery and platform</h3>
-              <ul class="chips chips-sm">
-                <li><img src="assets/icons/gitlab.svg" alt="">GitLab CI</li>
-                <li><img src="assets/icons/docker.svg" alt="">Docker</li>
-                <li><img src="assets/icons/git.svg" alt="">Git</li>
-                <li><i class="mono">AZ</i>Azure Data Factory</li>
-                <li><img src="assets/icons/vault.svg" alt="">HashiCorp Vault</li>
-                <li><i class="mono">BS</i>BrowserStack</li>
-                <li><i class="mono">LT</i>LambdaTest</li>
-              </ul>
-            </div>
-            <div class="group" style="--i:4">
-              <h3>Also: languages, data and tooling</h3>
-              <ul class="chips chips-sm">
-                <li><img src="assets/icons/typescript.svg" alt="">TypeScript</li>
-                <li><img src="assets/icons/springboot.svg" alt="">Spring Boot</li>
-                <li><i class="mono">SQL</i>SQL Server</li>
-                <li><img src="assets/icons/mongodb.svg" alt="">MongoDB</li>
-                <li><img src="assets/icons/oracle.svg" alt="">OracleDB</li>
-                <li><img src="assets/icons/jira.svg" alt="">Jira and Xray</li>
-                <li><i class="mono">AD</i>Azure DevOps</li>
-                <li><img src="assets/icons/githubcopilot.svg" alt="">GitHub Copilot</li>
-              </ul>
-            </div>
-          </div>
+          <div class="arch-detail" id="arch-detail" aria-live="polite"></div>
         </div>
       </article>
     </section>
-
 
     <section id="work" class="section">
       <header class="sec-head reveal">
@@ -166,63 +159,56 @@
             <div>
               <p class="repo-lede">Automated tests that check a demo online store and a public API, the way a real user
                 would, every time the code changes. Results are published to a public report anyone can open.</p>
-              <p class="repo-targets">
-                <span>Tested on</span>
-                <a href="https://www.saucedemo.com" target="_blank" rel="noopener">Sauce Demo</a> <em>practice online store</em>
-                <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a> <em>public REST API</em>
-              </p>
             </div>
             <div class="cta">
               <a class="btn btn-primary" href="https://dwhytan.github.io/qa-automation-portfolio" target="_blank" rel="noopener"><span class="status-dot" aria-hidden="true"></span>Live report <span aria-hidden="true">↗</span></a>
               <a class="btn" href="https://github.com/dwhytan/qa-automation-portfolio" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a>
             </div>
           </div>
-          <div class="built">
-            <h3>Built with</h3>
-            <ul class="chips chips-sm">
-              <li><i class="mono">PW</i>Playwright</li>
-              <li><img src="assets/icons/typescript.svg" alt="">TypeScript</li>
-              <li><img src="assets/icons/githubactions.svg" alt="">GitHub Actions</li>
-              <li><i class="mono">AL</i>Allure Report</li>
-              <li><img src="assets/icons/googlegemini.svg" alt="">Gemini API</li>
-              <li><i class="mono">AX</i>axe-core</li>
-              <li><i class="mono">PO</i>Page Object Model</li>
-            </ul>
-          </div>
-
-          <div class="flow">
-            <h3>How it works <span class="hint">select a step</span></h3>
-            <div class="flow-steps" role="tablist" aria-label="How the test suite works">
-              <button class="step" role="tab" id="step-1" aria-controls="flow-panel" aria-selected="true" tabindex="0"><span class="n">01</span><b>Code change</b><small>git push</small></button>
-              <button class="step" role="tab" id="step-2" aria-controls="flow-panel" aria-selected="false" tabindex="-1"><span class="n">02</span><b>Cloud run</b><small>GitHub Actions</small></button>
-              <button class="step" role="tab" id="step-3" aria-controls="flow-panel" aria-selected="false" tabindex="-1"><span class="n">03</span><b>Tests</b><small>Playwright</small></button>
-              <button class="step" role="tab" id="step-4" aria-controls="flow-panel" aria-selected="false" tabindex="-1"><span class="n">04</span><b>Report</b><small>Allure</small></button>
-              <button class="step" role="tab" id="step-5" aria-controls="flow-panel" aria-selected="false" tabindex="-1"><span class="n">05</span><b>AI review</b><small>Gemini</small></button>
+          <div class="diagram diagram--repo" id="repo-diagram">
+            <svg class="wires" aria-hidden="true"><g class="wire-paths"></g></svg>
+            <button class="dnode team" type="button" data-node="dev" style="grid-area:dev">
+              <svg class="people" viewBox="0 0 48 40" aria-hidden="true"><circle cx="24" cy="11" r="7"/><path d="M11 36c0-8 6-13 13-13s13 5 13 13z"/><circle cx="9" cy="15" r="5" opacity=".55"/><path d="M0 34c0-6 4-9 9-9 2 0 4 .5 5.5 1.5-2.5 2.5-4 5.5-4.5 9.5z" opacity=".55"/><circle cx="39" cy="15" r="5" opacity=".55"/><path d="M48 34c0-6-4-9-9-9-2 0-4 .5-5.5 1.5 2.5 2.5 4 5.5 4.5 9.5z" opacity=".55"/></svg>
+              <b>A code change</b><small>git push</small>
+            </button>
+            <button class="dnode" type="button" data-node="repo" style="grid-area:repo">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/git.svg" alt=""><img src="assets/icons/typescript.svg" alt=""></span>
+              <b>GitHub repo</b><small>tests · page objects</small>
+            </button>
+            <button class="dnode" type="button" data-node="ci" style="grid-area:ci">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/githubactions.svg" alt=""></span>
+              <b>GitHub Actions</b><small>clean Ubuntu run</small>
+            </button>
+            <div class="dregion" data-wire="suite" style="grid-area:suite">
+              <button class="region-head" type="button" data-node="suite">
+                <span class="icons" aria-hidden="true"><img src="assets/icons/playwright.svg" alt=""></span>
+                <b>Playwright</b><small>31 tests · Chromium · Firefox · WebKit</small>
+              </button>
+              <div class="cards">
+                <button class="card" type="button" data-node="ui"><span class="icons" aria-hidden="true"></span>Shopping flows</button>
+                <button class="card" type="button" data-node="api"><span class="icons" aria-hidden="true"></span>API · contract</button>
+                <button class="card" type="button" data-node="a11y"><span class="icons" aria-hidden="true"><img src="assets/icons/axe.png" alt="" class="color"></span>Accessibility</button>
+                <button class="card" type="button" data-node="visual"><span class="icons" aria-hidden="true"></span>Visual</button>
+                <button class="card" type="button" data-node="mobile"><span class="icons" aria-hidden="true"></span>Mobile</button>
+                <button class="card" type="button" data-node="perf"><span class="icons" aria-hidden="true"></span>Performance</button>
+              </div>
+              <code class="cmd">npx playwright test</code>
             </div>
-            <div class="flow-panel" id="flow-panel" role="tabpanel" aria-labelledby="step-1" aria-live="polite">
-              <template data-step="1"><p><b>Nobody has to press "run".</b> Every time code is pushed to GitHub, the whole suite starts on its own, so a broken change is caught minutes after it is made.</p></template>
-              <template data-step="2"><p><b>A clean machine every time.</b> GitHub Actions starts a fresh cloud computer and installs everything from scratch, so results never depend on my laptop. Flaky failures get two automatic retries.</p></template>
-              <template data-step="3"><p><b>31 tests act like real users.</b> Playwright opens Chrome, Firefox and Safari, logs in, adds a product to the cart, checks out and calls the API. It also checks accessibility, page speed and phone screens (iPhone 13, Pixel 5).</p></template>
-              <template data-step="4"><p><b>Proof anyone can open.</b> Results are published to a public Allure report with a screenshot, a video and a step-by-step trace of every test, passed or failed.</p></template>
-              <template data-step="5"><p><b>AI explains a failure.</b> A demo test sends a known login failure to Google Gemini, which answers with the likely root cause, a fix and how to prevent it. A first step toward faster triage.</p></template>
-            </div>
+            <button class="dnode region sut" type="button" data-node="apps" style="grid-area:apps">
+              <b>Apps under test</b><small>public demo targets</small>
+              <span class="card">Sauce Demo<em>web shop</em></span>
+              <span class="card">PokeAPI<em>REST API</em></span>
+            </button>
+            <button class="dnode" type="button" data-node="ai" style="grid-area:ai">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/googlegemini.svg" alt=""></span>
+              <b>Gemini AI review</b><small>explains a failure</small>
+            </button>
+            <button class="dnode" type="button" data-node="report" style="grid-area:report">
+              <span class="icons" aria-hidden="true"><img src="assets/icons/allure.png" alt="" class="color"></span>
+              <b>Allure report</b><small>live on GitHub Pages</small>
+            </button>
           </div>
-
-          <div class="checks">
-            <h3>What it checks</h3>
-            <ul>
-              <li><span class="pass" aria-hidden="true"></span><span>Can people log in, and are wrong passwords rejected?<small>Login · 3</small></span></li>
-              <li><span class="pass" aria-hidden="true"></span><span>Can a shopper add to cart and check out?<small>Checkout · 3</small></span></li>
-              <li><span class="pass" aria-hidden="true"></span><span>Do products list, sort and open correctly?<small>Inventory · 3</small></span></li>
-              <li><span class="pass" aria-hidden="true"></span><span>Does the API return the right data and errors?<small>API · 5</small></span></li>
-              <li><span class="pass" aria-hidden="true"></span><span>Does the API keep the format apps rely on?<small>Contract · 4</small></span></li>
-              <li><span class="pass" aria-hidden="true"></span><span>Can people with disabilities use the site?<small>Accessibility, WCAG 2.0 AA · 3</small></span></li>
-              <li><span class="pass" aria-hidden="true"></span><span>Does every page still look the way it should?<small>Visual regression · 3</small></span></li>
-              <li><span class="pass" aria-hidden="true"></span><span>Does it work on phone screens?<small>Mobile · 3</small></span></li>
-              <li><span class="pass" aria-hidden="true"></span><span>Does it load fast enough?<small>Core Web Vitals · 3</small></span></li>
-              <li><span class="pass ai" aria-hidden="true"></span><span>Can AI explain why a test failed?<small>AI analysis · 1</small></span></li>
-            </ul>
-          </div>
+          <div class="arch-detail" id="repo-detail" aria-live="polite"></div>
         </div>
       </article>
     </section>

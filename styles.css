@@ -234,7 +234,7 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
   transition: transform 220ms var(--ease-out), border-color 150ms ease, box-shadow 220ms var(--ease-out);
 }
 .cert:hover { transform: translateY(-3px); border-color: var(--accent); }
-.cert img, .cert svg, .cert-mark { width: 44px; height: 44px; flex: none; object-fit: contain; }
+.cert img, .cert svg { width: 44px; height: 44px; flex: none; object-fit: contain; }
 .cert b { display: block; font-size: 13.5px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
 .cert span { font-size: 12px; color: var(--text-2); }
 
@@ -302,6 +302,24 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
   transition-delay: calc(200ms + var(--i, 0) * 55ms);
 }
 .js .reveal.in .group, .js .reveal.in .suites li { opacity: 1; transform: none; }
+
+/* ───────── Section snapping ─────────
+   On large screens each section fills the viewport and the page settles on it,
+   so it takes a deliberate scroll to move to the next one. Native CSS snap, no
+   scroll-jacking. Phones and short windows keep free scrolling, because there
+   sections are taller than the screen. */
+@media (min-width: 900px) and (min-height: 640px) {
+  html { scroll-snap-type: y mandatory; scroll-padding-top: 32px; }
+  main { padding-top: 32px; padding-bottom: 0; }
+  .section, .hero {
+    min-height: calc(100svh - 32px);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 40px 0 96px; /* bottom room so the dock never covers content */
+    scroll-snap-align: start; scroll-snap-stop: always;
+    scroll-margin-top: 0;
+  }
+  .footer { scroll-snap-align: end; padding-bottom: 96px; }
+}
 
 /* ───────── Responsive ───────── */
 @media (max-width: 900px) {

@@ -321,6 +321,22 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
   .footer { scroll-snap-align: end; padding-bottom: 96px; }
 }
 
+/* Phones and short windows: some sections (Stack, Portfolio) are taller than the
+   screen, and a mandatory snap would trap you inside them. "proximity" settles on
+   a section when you stop near its top and lets long sections scroll freely. */
+@media (max-width: 899px), (max-height: 639px) {
+  html { scroll-snap-type: y proximity; scroll-padding-top: 32px; }
+  main { padding-top: 32px; }
+  .section, .hero {
+    min-height: calc(100svh - 32px);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 32px 0 88px; /* bottom room for the dock */
+    scroll-snap-align: start;
+    scroll-margin-top: 0;
+  }
+  .footer { scroll-snap-align: end; }
+}
+
 /* ───────── Responsive ───────── */
 @media (max-width: 900px) {
   .certs { grid-template-columns: repeat(2, 1fr); }

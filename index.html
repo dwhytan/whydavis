@@ -33,7 +33,6 @@
       <a href="#about">About</a>
       <a href="#stack">Stack</a>
       <a href="#work">Work</a>
-      <a href="#certs">Certifications</a>
     </nav>
     <div class="mb-status">
       <time id="clock" class="mb-clock"></time>
@@ -52,8 +51,20 @@
           <p class="prompt"><span class="p-user">~</span> <span class="p-sym">❯</span> whoami</p>
           <h1 class="name">Davis Huaytán<span class="cursor" aria-hidden="true"></span></h1>
           <p class="role">Software Development Engineer in Test</p>
-          <p class="summary">7+ years building test automation for banking and eCommerce.</p>
-          <p class="focus"><span class="p-sym">❯</span> test automation · ci/cd · performance · security · ai testing</p>
+          <p class="summary">7+ years building test automation for banking and eCommerce, specialized in Serenity Screenplay and Salesforce.</p>
+          <div class="certs-row">
+          <ul class="badges" aria-label="Certifications">
+            <li><button class="badge" type="button" data-name="Foundation Level" data-org="ISTQB CTFL"><img src="assets/badges/ctfl.png" alt="ISTQB CTFL Foundation Level" width="32" height="32"></button></li>
+            <li><button class="badge" type="button" data-name="Agile Tester" data-org="ISTQB CTFL-AT"><img src="assets/badges/ctfl-at.png" alt="ISTQB CTFL-AT Agile Tester" width="32" height="32"></button></li>
+            <li><button class="badge" type="button" data-name="Test Automation Engineering" data-org="ISTQB CTAL-TAE"><img src="assets/badges/ctal-tae.png" alt="ISTQB CTAL-TAE Test Automation Engineering" width="32" height="32"></button></li>
+            <li><button class="badge" type="button" data-name="AI Testing" data-org="ISTQB CT-AI"><img src="assets/badges/ct-ai.png" alt="ISTQB CT-AI AI Testing" width="32" height="32"></button></li>
+            <li class="badge-sep" aria-hidden="true"></li>
+            <li><button class="badge" type="button" data-name="Platform Administrator" data-org="Salesforce"><img src="assets/badges/sf-admin.png" alt="Salesforce Platform Administrator" width="32" height="32"></button></li>
+            <li><button class="badge" type="button" data-name="Platform Foundations" data-org="Salesforce"><img src="assets/badges/sf-associate.png" alt="Salesforce Platform Foundations" width="32" height="32"></button></li>
+            <li><button class="badge" type="button" data-name="AI Associate" data-org="Salesforce"><img src="assets/badges/sf-ai-associate.png" alt="Salesforce AI Associate" width="32" height="32"></button></li>
+          </ul>
+            <p class="badge-caption" aria-hidden="true"><span class="cap-default">4× ISTQB · 3× Salesforce</span><span class="cap-live"></span></p>
+          </div>
           <div class="cta">
             <a class="btn btn-primary" href="https://www.linkedin.com/in/davis-huaytan" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
             <a class="btn" href="https://github.com/dwhytan" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
@@ -143,7 +154,7 @@
     <section id="work" class="section">
       <header class="sec-head reveal">
         <p class="eyebrow">Portfolio</p>
-        <h2>Open-source automation framework</h2>
+        <h2>A test suite that runs itself</h2>
       </header>
       <article class="window repo reveal">
         <div class="titlebar">
@@ -151,59 +162,71 @@
           <span class="title">dwhytan / qa-automation-portfolio</span>
         </div>
         <div class="win-body repo-body">
-          <div class="repo-info">
-            <div class="repo-badges">
-              <span class="pill pill-live"><span class="status-dot" aria-hidden="true"></span>Live</span>
-              <span class="pill pill-ai">✦ AI-powered</span>
-              <span class="pill">31 tests</span>
+          <div class="repo-head">
+            <div>
+              <p class="repo-lede">Automated tests that check a demo online store and a public API, the way a real user
+                would, every time the code changes. Results are published to a public report anyone can open.</p>
+              <p class="repo-targets">
+                <span>Tested on</span>
+                <a href="https://www.saucedemo.com" target="_blank" rel="noopener">Sauce Demo</a> <em>practice online store</em>
+                <a href="https://pokeapi.co" target="_blank" rel="noopener">PokeAPI</a> <em>public REST API</em>
+              </p>
             </div>
-            <h3>qa-automation-portfolio</h3>
-            <p>End-to-end framework built with Playwright and TypeScript, running on GitHub Actions with Allure
-              reporting and Gemini-powered failure analysis. Page Object Model, three browsers, two mobile viewports.</p>
-            <ul class="chips chips-sm">
-              <li><i class="mono">PW</i>Playwright</li>
-              <li><img src="assets/icons/typescript.svg" alt="">TypeScript</li>
-              <li><img src="assets/icons/githubactions.svg" alt="">Actions</li>
-              <li><img src="assets/icons/googlegemini.svg" alt="">Gemini</li>
-              <li><i class="mono">AX</i>axe-core</li>
-            </ul>
             <div class="cta">
-              <a class="btn btn-primary" href="https://dwhytan.github.io/qa-automation-portfolio" target="_blank" rel="noopener">Allure report <span aria-hidden="true">↗</span></a>
+              <a class="btn btn-primary" href="https://dwhytan.github.io/qa-automation-portfolio" target="_blank" rel="noopener"><span class="status-dot" aria-hidden="true"></span>Live report <span aria-hidden="true">↗</span></a>
               <a class="btn" href="https://github.com/dwhytan/qa-automation-portfolio" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a>
             </div>
           </div>
-          <ul class="suites" aria-label="Test suites">
-            <li style="--i:0"><span class="pass" aria-hidden="true"></span>Login<em>3</em></li>
-            <li style="--i:1"><span class="pass" aria-hidden="true"></span>Checkout<em>3</em></li>
-            <li style="--i:2"><span class="pass" aria-hidden="true"></span>Inventory<em>3</em></li>
-            <li style="--i:3"><span class="pass" aria-hidden="true"></span>API<em>5</em></li>
-            <li style="--i:4"><span class="pass" aria-hidden="true"></span>Contract<em>4</em></li>
-            <li style="--i:5"><span class="pass" aria-hidden="true"></span>Accessibility · WCAG 2.0 AA<em>3</em></li>
-            <li style="--i:6"><span class="pass" aria-hidden="true"></span>Visual regression<em>3</em></li>
-            <li style="--i:7"><span class="pass" aria-hidden="true"></span>Mobile · iPhone 13, Pixel 5<em>3</em></li>
-            <li style="--i:8"><span class="pass" aria-hidden="true"></span>Performance · Core Web Vitals<em>3</em></li>
-            <li style="--i:9"><span class="pass ai" aria-hidden="true"></span>AI failure analysis<em>1</em></li>
-          </ul>
+          <div class="built">
+            <h3>Built with</h3>
+            <ul class="chips chips-sm">
+              <li><i class="mono">PW</i>Playwright</li>
+              <li><img src="assets/icons/typescript.svg" alt="">TypeScript</li>
+              <li><img src="assets/icons/githubactions.svg" alt="">GitHub Actions</li>
+              <li><i class="mono">AL</i>Allure Report</li>
+              <li><img src="assets/icons/googlegemini.svg" alt="">Gemini API</li>
+              <li><i class="mono">AX</i>axe-core</li>
+              <li><i class="mono">PO</i>Page Object Model</li>
+            </ul>
+          </div>
+
+          <div class="flow">
+            <h3>How it works <span class="hint">select a step</span></h3>
+            <div class="flow-steps" role="tablist" aria-label="How the test suite works">
+              <button class="step" role="tab" id="step-1" aria-controls="flow-panel" aria-selected="true" tabindex="0"><span class="n">01</span><b>Code change</b><small>git push</small></button>
+              <button class="step" role="tab" id="step-2" aria-controls="flow-panel" aria-selected="false" tabindex="-1"><span class="n">02</span><b>Cloud run</b><small>GitHub Actions</small></button>
+              <button class="step" role="tab" id="step-3" aria-controls="flow-panel" aria-selected="false" tabindex="-1"><span class="n">03</span><b>Tests</b><small>Playwright</small></button>
+              <button class="step" role="tab" id="step-4" aria-controls="flow-panel" aria-selected="false" tabindex="-1"><span class="n">04</span><b>Report</b><small>Allure</small></button>
+              <button class="step" role="tab" id="step-5" aria-controls="flow-panel" aria-selected="false" tabindex="-1"><span class="n">05</span><b>AI review</b><small>Gemini</small></button>
+            </div>
+            <div class="flow-panel" id="flow-panel" role="tabpanel" aria-labelledby="step-1" aria-live="polite">
+              <template data-step="1"><p><b>Nobody has to press "run".</b> Every time code is pushed to GitHub, the whole suite starts on its own, so a broken change is caught minutes after it is made.</p></template>
+              <template data-step="2"><p><b>A clean machine every time.</b> GitHub Actions starts a fresh cloud computer and installs everything from scratch, so results never depend on my laptop. Flaky failures get two automatic retries.</p></template>
+              <template data-step="3"><p><b>31 tests act like real users.</b> Playwright opens Chrome, Firefox and Safari, logs in, adds a product to the cart, checks out and calls the API. It also checks accessibility, page speed and phone screens (iPhone 13, Pixel 5).</p></template>
+              <template data-step="4"><p><b>Proof anyone can open.</b> Results are published to a public Allure report with a screenshot, a video and a step-by-step trace of every test, passed or failed.</p></template>
+              <template data-step="5"><p><b>AI explains a failure.</b> A demo test sends a known login failure to Google Gemini, which answers with the likely root cause, a fix and how to prevent it. A first step toward faster triage.</p></template>
+            </div>
+          </div>
+
+          <div class="checks">
+            <h3>What it checks</h3>
+            <ul>
+              <li><span class="pass" aria-hidden="true"></span><span>Can people log in, and are wrong passwords rejected?<small>Login · 3</small></span></li>
+              <li><span class="pass" aria-hidden="true"></span><span>Can a shopper add to cart and check out?<small>Checkout · 3</small></span></li>
+              <li><span class="pass" aria-hidden="true"></span><span>Do products list, sort and open correctly?<small>Inventory · 3</small></span></li>
+              <li><span class="pass" aria-hidden="true"></span><span>Does the API return the right data and errors?<small>API · 5</small></span></li>
+              <li><span class="pass" aria-hidden="true"></span><span>Does the API keep the format apps rely on?<small>Contract · 4</small></span></li>
+              <li><span class="pass" aria-hidden="true"></span><span>Can people with disabilities use the site?<small>Accessibility, WCAG 2.0 AA · 3</small></span></li>
+              <li><span class="pass" aria-hidden="true"></span><span>Does every page still look the way it should?<small>Visual regression · 3</small></span></li>
+              <li><span class="pass" aria-hidden="true"></span><span>Does it work on phone screens?<small>Mobile · 3</small></span></li>
+              <li><span class="pass" aria-hidden="true"></span><span>Does it load fast enough?<small>Core Web Vitals · 3</small></span></li>
+              <li><span class="pass ai" aria-hidden="true"></span><span>Can AI explain why a test failed?<small>AI analysis · 1</small></span></li>
+            </ul>
+          </div>
         </div>
       </article>
     </section>
 
-    <!-- Certifications -->
-    <section id="certs" class="section">
-      <header class="sec-head reveal">
-        <p class="eyebrow">Certifications</p>
-        <h2>Verified knowledge</h2>
-      </header>
-      <ul class="certs">
-        <li class="cert glass reveal" style="--i:0"><img src="assets/badges/ctfl.png" alt="" width="48" height="48"><div><b>Foundation Level</b><span>ISTQB® CTFL</span></div></li>
-        <li class="cert glass reveal" style="--i:1"><img src="assets/badges/ctfl-at.png" alt="" width="48" height="48"><div><b>Agile Tester</b><span>ISTQB® CTFL-AT</span></div></li>
-        <li class="cert glass reveal" style="--i:2"><img src="assets/badges/ctal-tae.png" alt="" width="48" height="48"><div><b>Test Automation Engineering</b><span>ISTQB® CTAL-TAE 2.0</span></div></li>
-        <li class="cert glass reveal" style="--i:3"><img src="assets/badges/ct-ai.png" alt="" width="48" height="48"><div><b>AI Testing</b><span>ISTQB® CT-AI</span></div></li>
-        <li class="cert glass reveal" style="--i:4"><img src="assets/badges/sf-admin.png" alt="" width="48" height="48"><div><b>Platform Administrator</b><span>Salesforce</span></div></li>
-        <li class="cert glass reveal" style="--i:5"><img src="assets/badges/sf-associate.png" alt="" width="48" height="48"><div><b>Platform Foundations</b><span>Salesforce</span></div></li>
-        <li class="cert glass reveal" style="--i:6"><img src="assets/badges/sf-ai-associate.png" alt="" width="48" height="48"><div><b>AI Associate</b><span>Salesforce</span></div></li>
-      </ul>
-    </section>
   </main>
 
   <footer class="footer">
@@ -220,9 +243,6 @@
     </a>
     <a class="dock-item" href="#work" data-label="Portfolio" aria-label="Portfolio" style="--g1:#5be3a0">
       <svg viewBox="0 0 24 24"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
-    </a>
-    <a class="dock-item" href="#certs" data-label="Certifications" aria-label="Certifications" style="--g1:#f3a3d4">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></svg>
     </a>
     <span class="dock-sep" aria-hidden="true"></span>
     <a class="dock-item ext" href="https://github.com/dwhytan" target="_blank" rel="noopener" data-label="GitHub" aria-label="GitHub" style="--g1:#c9c6d8">

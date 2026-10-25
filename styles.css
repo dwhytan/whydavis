@@ -105,7 +105,7 @@ ul, ol { list-style: none; }
 main { width: min(1080px, 100% - 32px); margin: 0 auto; padding: 84px 0 40px; }
 .section { padding: 56px 0; scroll-margin-top: 40px; }
 .hero { padding-top: 28px; }
-.sec-head { margin-bottom: 20px; }
+.sec-head { margin-bottom: 14px; }
 .eyebrow {
   font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.14em;
   color: var(--accent); margin-bottom: 10px;
@@ -155,8 +155,32 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 }
 @keyframes blink { 50% { opacity: 0; } }
 .role { margin-top: 14px; font-size: clamp(17px, 2.2vw, 21px); font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
-.summary { margin-top: 10px; font-size: 16px; color: var(--text-2); }
-.focus { margin-top: 16px; font: 400 13px/1.5 var(--mono); color: var(--text-3); }
+.summary { margin-top: 10px; max-width: 58ch; font-size: 16px; color: var(--text-2); }
+/* Certification badges: small in the hero. Hover / focus / tap grows the badge a
+   little and names it in the caption beside the row, so nothing covers the text. */
+.certs-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin-top: 18px; }
+.badges { display: flex; align-items: center; gap: 6px; }
+.badge-sep { width: 1px; height: 20px; margin: 0 6px; background: var(--stroke-2); }
+.badge {
+  display: block; padding: 2px; border: 0; border-radius: 50%;
+  background: none; cursor: default; -webkit-tap-highlight-color: transparent;
+}
+.badge img {
+  width: 32px; height: 32px; object-fit: contain;
+  transition: transform 180ms var(--ease-out), opacity 180ms ease;
+}
+.badges:has(.badge:is(:hover, :focus-visible, .active)) img { opacity: 0.55; }
+.badge:is(:hover, :focus-visible, .active) img { transform: scale(1.3); opacity: 1 !important; }
+.badge:focus-visible { outline-offset: 2px; }
+.badge-caption {
+  position: relative; min-height: 20px; flex: 1 1 240px;
+  font: 400 12.5px/20px var(--mono); color: var(--text-3); white-space: nowrap;
+}
+.badge-caption span { transition: opacity 150ms ease; }
+.cap-live { position: absolute; left: 0; top: 0; color: var(--text); opacity: 0; }
+.cap-live em { font-style: normal; color: var(--text-3); }
+.certs-row.showing .cap-default { opacity: 0; }
+.certs-row.showing .cap-live { opacity: 1; }
 .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 .btn {
   display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 16px;
@@ -197,28 +221,70 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 .chips-sm li { height: 24px; font-size: 12px; }
 
 
-.repo-body { display: grid; grid-template-columns: 1.15fr 1fr; gap: 32px; }
-.repo-info h3 { font: 600 22px/1.2 var(--mono); letter-spacing: -0.02em; margin: 14px 0 8px; }
-.repo-info p { color: var(--text-2); margin-bottom: 16px; }
-.repo-badges { display: flex; flex-wrap: wrap; gap: 6px; }
-.pill {
-  display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 9px;
-  border-radius: 999px; font-size: 11.5px; font-weight: 600;
-  border: 1px solid var(--stroke-2); color: var(--text-2);
+.repo-body { display: grid; gap: 18px; }
+.repo .win-body { padding-top: 22px; padding-bottom: 22px; }
+.repo-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.repo-head .cta { margin-top: 0; flex: none; }
+.repo-lede { font-size: 16px; color: var(--text); max-width: 74ch; }
+.repo-targets { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin-top: 10px; font-size: 13.5px; }
+.repo-targets span { color: var(--text-3); }
+.repo-targets a { color: var(--text); text-decoration: underline; text-decoration-color: var(--stroke-2); text-underline-offset: 3px; }
+.repo-targets a:hover { text-decoration-color: var(--accent); }
+.repo-targets em { font-style: normal; color: var(--text-3); margin-right: 8px; }
+.btn .status-dot { width: 7px; height: 7px; }
+.built { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.repo .built h3 { margin: 0; }
+.repo h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 12px; }
+.hint { margin-left: 6px; font: 400 11px/1 var(--mono); text-transform: none; letter-spacing: 0; color: var(--text-3); opacity: 0.8; }
+
+/* Pipeline: five steps on a line that fills as the run advances */
+.flow-steps {
+  --p: 0;
+  position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
 }
-.pill-live { color: var(--green); border-color: color-mix(in srgb, var(--green) 40%, transparent); background: var(--green-soft); }
-.pill-live .status-dot { width: 6px; height: 6px; }
-.pill-ai { color: var(--accent-2); border-color: color-mix(in srgb, var(--accent-2) 40%, transparent); background: color-mix(in srgb, var(--accent-2) 12%, transparent); }
-.suites {
-  border-radius: 12px; border: 1px solid var(--stroke); background: var(--glass-hi);
-  padding: 6px; align-self: start; font-size: 13.5px;
+.flow-steps::before, .flow-steps::after {
+  content: ""; position: absolute; top: 25px; left: 10%; height: 2px; border-radius: 2px; pointer-events: none;
 }
-.suites li {
-  display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px;
-  transition: background-color 150ms ease;
+.flow-steps::before { right: 10%; background: var(--stroke-2); }
+.flow-steps::after {
+  width: calc(var(--p) * 80%);
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  transition: width 500ms var(--ease-in-out);
 }
-.suites li:hover { background: var(--glass-hi); }
-.suites em { margin-left: auto; font: 400 12px/1 var(--mono); font-style: normal; color: var(--text-3); }
+.step {
+  position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 6px 10px; border: 1px solid transparent; border-radius: 12px;
+  background: none; color: var(--text-2); font: inherit; text-align: center; cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+.step .n {
+  display: grid; place-items: center; width: 30px; height: 30px; margin-bottom: 6px; border-radius: 50%;
+  font: 500 11px/1 var(--mono); color: var(--text-2);
+  background: #1b1a23; border: 1px solid var(--stroke-2);
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+.step b { font-size: 13.5px; font-weight: 600; color: var(--text); }
+.step small { font: 400 11.5px/1.3 var(--mono); color: var(--text-3); }
+.step:hover { background: var(--glass-hi); }
+.step.done .n { border-color: color-mix(in srgb, var(--accent) 60%, transparent); color: var(--accent); }
+.step[aria-selected="true"] { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.step[aria-selected="true"] .n { background: var(--accent); border-color: var(--accent); color: #16151c; }
+.step:active { transform: scale(0.97); }
+.flow-panel {
+  margin-top: 8px; min-height: 72px; padding: 12px 16px; border-radius: 12px;
+  background: var(--glass-hi); border: 1px solid var(--stroke);
+  font-size: 14.5px; color: var(--text-2);
+}
+.flow-panel b { color: var(--text); font-weight: 600; }
+.flow-panel p { animation: panel-in 260ms var(--ease-out); }
+@keyframes panel-in { from { opacity: 0; transform: translateY(4px); } }
+
+/* What it checks: plain-language questions, test names underneath */
+.checks ul { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 28px; }
+.checks li { display: flex; align-items: baseline; gap: 10px; padding: 4px 0; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--stroke); }
+.checks li > span:last-child { display: flex; flex: 1; align-items: baseline; justify-content: space-between; gap: 12px; }
+.checks li .pass { align-self: center; }
+.checks small { flex: none; font: 400 11.5px/1.4 var(--mono); color: var(--text-3); }
 .pass { width: 14px; height: 14px; border-radius: 50%; flex: none; position: relative; background: var(--green-soft); }
 .pass::after {
   content: ""; position: absolute; left: 4.5px; top: 2.5px; width: 3.5px; height: 6.5px;
@@ -226,17 +292,6 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 }
 .pass.ai { background: color-mix(in srgb, var(--accent-2) 16%, transparent); }
 .pass.ai::after { border-color: var(--accent-2); }
-
-/* ───────── Certifications ───────── */
-.certs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.cert {
-  display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px;
-  transition: transform 220ms var(--ease-out), border-color 150ms ease, box-shadow 220ms var(--ease-out);
-}
-.cert:hover { transform: translateY(-3px); border-color: var(--accent); }
-.cert img, .cert svg { width: 44px; height: 44px; flex: none; object-fit: contain; }
-.cert b { display: block; font-size: 13.5px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
-.cert span { font-size: 12px; color: var(--text-2); }
 
 /* ───────── Footer ───────── */
 .footer { text-align: center; color: var(--text-3); font-size: 12.5px; padding: 8px 16px 128px; }
@@ -296,25 +351,25 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
   transition-delay: calc(var(--i, 0) * 70ms);
 }
 .js .reveal.in { opacity: 1; transform: none; }
-.js .reveal .group, .js .reveal .suites li {
+.js .reveal .group, .js .reveal .checks li {
   opacity: 0; transform: translateY(8px);
   transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
   transition-delay: calc(200ms + var(--i, 0) * 55ms);
 }
-.js .reveal.in .group, .js .reveal.in .suites li { opacity: 1; transform: none; }
+.js .reveal.in .group, .js .reveal.in .checks li { opacity: 1; transform: none; }
 
 /* ───────── Section snapping ─────────
    On large screens each section fills the viewport and the page settles on it,
    so it takes a deliberate scroll to move to the next one. Native CSS snap, no
-   scroll-jacking. Phones and short windows keep free scrolling, because there
-   sections are taller than the screen. */
-@media (min-width: 900px) and (min-height: 640px) {
+   scroll-jacking. Only on screens tall enough for every section to fit; the
+   rest get the soft snap below. */
+@media (min-width: 900px) and (min-height: 860px) {
   html { scroll-snap-type: y mandatory; scroll-padding-top: 32px; }
   main { padding-top: 32px; padding-bottom: 0; }
   .section, .hero {
     min-height: calc(100svh - 32px);
     display: flex; flex-direction: column; justify-content: center;
-    padding: 40px 0 96px; /* bottom room so the dock never covers content */
+    padding: 20px 0 86px; /* bottom room so the dock never covers content */
     scroll-snap-align: start; scroll-snap-stop: always;
     scroll-margin-top: 0;
   }
@@ -324,7 +379,7 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 /* Phones and short windows: some sections (Stack, Portfolio) are taller than the
    screen, and a mandatory snap would trap you inside them. "proximity" settles on
    a section when you stop near its top and lets long sections scroll freely. */
-@media (max-width: 899px), (max-height: 639px) {
+@media (max-width: 899px), (max-height: 859px) {
   html { scroll-snap-type: y proximity; scroll-padding-top: 32px; }
   main { padding-top: 32px; }
   .section, .hero {
@@ -339,13 +394,27 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 
 /* ───────── Responsive ───────── */
 @media (max-width: 900px) {
-  .certs { grid-template-columns: repeat(2, 1fr); }
-  .repo-body { grid-template-columns: 1fr; }
+  .repo-head { flex-direction: column; }
 }
 @media (max-width: 640px) {
+  /* pipeline turns vertical: number on the left, line runs down */
+  .flow-steps { grid-template-columns: 1fr; gap: 2px; }
+  .flow-steps::before, .flow-steps::after { top: 22px; left: 26px; right: auto; width: 2px; height: auto; }
+  .flow-steps::before { bottom: 22px; }
+  .flow-steps::after { height: calc(var(--p) * (100% - 44px)); width: 2px; transition: height 500ms var(--ease-in-out); }
+  .step { flex-direction: row; align-items: center; gap: 10px; padding: 6px 10px; text-align: left; }
+  .step .n { margin-bottom: 0; flex: none; }
+  .step small { margin-left: auto; }
+  .flow-panel { min-height: 120px; }
+  .checks ul { grid-template-columns: 1fr; }
+  /* badges stay on one line; the caption drops below them */
+  .badges { gap: 4px; }
+  .badge-caption { flex-basis: 100%; white-space: normal; }
+  .badge img { width: 28px; height: 28px; }
+  .badge-sep { margin: 0 4px; }
   .mb-nav { display: none; }
   .win-body { padding: 20px; }
-  .also, .certs { grid-template-columns: 1fr; }
+  .also { grid-template-columns: 1fr; }
   .section { padding: 40px 0; }
   .dock { gap: 4px; padding: 6px; border-radius: 18px; }
   .dock-item { width: 40px; height: 40px; border-radius: 10px; }
@@ -355,5 +424,5 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; transition-delay: 0ms !important; }
-  .js .reveal, .js .reveal .group, .js .reveal .suites li { opacity: 1; transform: none; filter: none; }
+  .js .reveal, .js .reveal .group, .js .reveal .checks li { opacity: 1; transform: none; filter: none; }
 }

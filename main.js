@@ -202,6 +202,86 @@
   }, { rootMargin: "-45% 0px -50% 0px" });
   document.querySelectorAll("main .section").forEach((s) => sectionIO.observe(s));
 
+  /* ── Pipeline diagram: tabs that explain each step; plays through once when
+        it scrolls into view, and stops as soon as the visitor picks a step ── */
+  const flow = document.querySelector(".flow-steps");
+  if (flow) {
+    const steps = [...flow.querySelectorAll(".step")];
+    const panel = document.getElementById("flow-panel");
+    const texts = [...panel.querySelectorAll("template")].map((t) => t.innerHTML);
+    let current = 0, timer = null;
+
+    const select = (i, focus = false) => {
+      current = i;
+      steps.forEach((s, k) => {
+        const on = k === i;
+        s.setAttribute("aria-selected", on);
+        s.tabIndex = on ? 0 : -1;
+        s.classList.toggle("done", k <= i);
+      });
+      flow.style.setProperty("--p", i / (steps.length - 1));
+      panel.setAttribute("aria-labelledby", steps[i].id);
+      panel.innerHTML = texts[i];
+      if (focus) steps[i].focus();
+    };
+    const stop = () => { clearInterval(timer); timer = null; };
+
+    steps.forEach((s, i) => s.addEventListener("click", () => { stop(); select(i); }));
+    flow.addEventListener("keydown", (e) => {
+      const keys = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+      if (e.key in keys) {
+        e.preventDefault(); stop();
+        select((current + keys[e.key] + steps.length) % steps.length, true);
+      } else if (e.key === "Home" || e.key === "End") {
+        e.preventDefault(); stop();
+        select(e.key === "Home" ? 0 : steps.length - 1, true);
+      }
+    });
+    select(0);
+
+    if (!reduced) {
+      const playIO = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        playIO.disconnect();
+        timer = setInterval(() => {
+          if (current === steps.length - 1) return stop();
+          select(current + 1);
+        }, 3200);
+      }, { threshold: 0.6 });
+      playIO.observe(flow);
+    }
+  }
+
+  /* ── Badges: name the badge in the caption beside the row. Mouse: hover only,
+        so a click never leaves one stuck open. Keyboard: focus. Touch (no hover,
+        and iOS Safari doesn't focus buttons on tap): tap selects, tap again or
+        elsewhere clears. ── */
+  const certsRow = document.querySelector(".certs-row");
+  const badges = [...document.querySelectorAll(".badge")];
+  const caption = certsRow && certsRow.querySelector(".cap-live");
+  const show = (b) => {
+    caption.innerHTML = `${b.dataset.name} <em>· ${b.dataset.org}</em>`;
+    certsRow.classList.add("showing");
+  };
+  const clear = () => {
+    certsRow.classList.remove("showing");
+    badges.forEach((o) => o.classList.remove("active"));
+  };
+  badges.forEach((b) => {
+    b.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") show(b); });
+    b.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") clear(); });
+    b.addEventListener("focus", () => { if (b.matches(":focus-visible")) show(b); });
+    b.addEventListener("blur", clear);
+    b.addEventListener("click", (e) => {
+      if (finePointer) return;
+      e.stopPropagation();
+      const on = !b.classList.contains("active");
+      clear();
+      if (on) { b.classList.add("active"); show(b); }
+    });
+  });
+  document.addEventListener("click", () => { if (!finePointer) clear(); });
+
   if (!finePointer || reduced) return;
 
   /* ── Dock magnification ── */

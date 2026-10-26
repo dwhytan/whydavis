@@ -1,6 +1,6 @@
 # whydavis.me
 
-Personal portfolio of Davis Huaytán — SDET. Static site (HTML, CSS, vanilla JS), no build step.
+Personal portfolio of Davis Huaytán, SDET. Static site (HTML, CSS, vanilla JS), no build step.
 
 ## Run locally
 

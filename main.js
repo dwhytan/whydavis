@@ -409,7 +409,7 @@
         sut: ["Systems under test", "What gets checked: front ends, services and the data behind them.", T(TOOLSET.sut)],
         reports: ["Reports", "Evidence the team can read: what passed, what failed and why.", T(TOOLSET.reports)],
       },
-      // [from, to, kind] — kind "loop" runs along the bottom back to the start.
+      // [from, to, kind]; kind "loop" runs along the bottom back to the start.
       wires: [
         ["team", "plan"], ["team", "code"], ["plan", "code"],
         ["code", "fw"], ["ci", "fw"], ["fw", "exec"], ["exec", "sut"],

@@ -311,9 +311,17 @@
     reserveDetail();
     // Wires follow the layout: after the window finishes opening, on resize and once fonts load.
     root.closest(".window").addEventListener("transitionend", draw);
-    let wireTimer;
-    addEventListener("resize", () => { clearTimeout(wireTimer); wireTimer = setTimeout(() => { reserveDetail(); draw(); }, 120); });
+    // Only width changes reflow the diagram; mobile browsers fire resize when the
+    // address bar shows or hides during scrolling, and that shouldn't redraw anything.
+    let wireTimer, lastWidth = innerWidth;
+    addEventListener("resize", () => {
+      if (innerWidth === lastWidth) return;
+      lastWidth = innerWidth;
+      clearTimeout(wireTimer);
+      wireTimer = setTimeout(() => { reserveDetail(); draw(); }, 120);
+    });
     document.fonts?.ready.then(() => { reserveDetail(); draw(); });
+    return { draw };
   };
 
   const stackDiagram = document.getElementById("diagram");
@@ -356,19 +364,50 @@
       allure: ["Allure Report", "Readable test reports with steps, screenshots, video and traces."],
     };
     const T = (ids) => ids.map((t) => TOOLS[t]);
-    wireDiagram(stackDiagram, document.getElementById("arch-detail"), {
+    // Logo for each tool: [file, class]; "sil" = white silhouette, "color" = brand colors.
+    const ICONS = {
+      jira: ["jira.svg"], "azure-devops": ["azuredevops.svg"], cucumber: ["cucumber.svg"],
+      java: ["openjdk.svg"], typescript: ["typescript.svg"], springboot: ["springboot.svg"], copilot: ["githubcopilot.svg"],
+      jenkins: ["jenkins.svg"], "github-actions": ["githubactions.svg"], gitlab: ["gitlab.svg"],
+      serenity: ["serenity.png", "sil"], playwright: ["playwright.svg"], restassured: ["restassured.png", "sil"],
+      karate: ["karate.svg"], selenium: ["selenium.svg"], cypress: ["cypress.svg"], appium: ["appium.svg"],
+      docker: ["docker.svg"], testcontainers: ["testcontainers.svg", "color"], browserstack: ["browserstack.svg", "color"],
+      lambdatest: ["lambdatest.png", "sil"], vault: ["vault.svg"], "gh-secrets": ["github.svg"],
+      jmeter: ["apachejmeter.svg"], loadrunner: ["loadrunner.png", "color"], k6: ["k6.svg"], zap: ["owasp.svg"], burp: ["burpsuite.svg"],
+      postman: ["postman.svg"], salesforce: ["salesforce.svg"], sqlserver: ["sqlserver.svg"], mongodb: ["mongodb.svg"],
+      oracle: ["oracle.svg"], adf: ["azure.svg"], allure: ["allure.png", "color"],
+    };
+    const TOOLSET = {
+      plan: ["jira", "azure-devops", "cucumber"],
+      code: ["java", "typescript", "springboot", "copilot"],
+      ci: ["jenkins", "github-actions", "gitlab"],
+      fw: ["serenity", "playwright", "restassured", "karate", "selenium", "cypress", "appium"],
+      exec: ["docker", "testcontainers", "browserstack", "lambdatest", "vault", "gh-secrets"],
+      load: ["jmeter", "loadrunner", "k6", "zap", "burp"],
+      sut: ["postman", "salesforce", "sqlserver", "mongodb", "oracle", "adf"],
+      reports: ["allure", "jira"],
+    };
+    // On phones a block opens in place and shows its tools as icon chips.
+    for (const [node, ids] of Object.entries(TOOLSET)) {
+      const chips = ids.map((t) => {
+        const [file, cls] = ICONS[t];
+        return `<span class="tchip"><img src="assets/icons/${file}" alt=""${cls ? ` class="${cls}"` : ""}>${TOOLS[t][0]}</span>`;
+      }).join("");
+      stackDiagram.querySelector(`[data-node="${node}"]`).insertAdjacentHTML("beforeend", `<span class="tools" aria-hidden="true"><span class="tools-inner">${chips}</span></span>`);
+    }
+    const stack = wireDiagram(stackDiagram, document.getElementById("arch-detail"), {
       pinned: "fw",
       markers: ["dot", "dot-on"],
       nodes: {
         team: ["QA and dev team", "Where every test starts: a risk, a requirement or a bug worth never seeing again."],
-        plan: ["Plan", "Decide what to test and agree on it before code exists.", T(["jira", "azure-devops", "cucumber"])],
-        code: ["Code", "Write tests and tooling, with AI assistance where it helps.", T(["java", "typescript", "springboot", "copilot"])],
-        ci: ["CI pipeline", "Every change triggers the suites automatically.", T(["jenkins", "github-actions", "gitlab"])],
-        fw: ["Test framework", "The automation itself: UI, API and mobile tests.", T(["serenity", "playwright", "restassured", "karate", "selenium", "cypress", "appium"])],
-        exec: ["Execution", "Where the tests actually run.", T(["docker", "testcontainers", "browserstack", "lambdatest", "vault", "gh-secrets"])],
-        load: ["Load and security", "How the system behaves under pressure and under attack.", T(["jmeter", "loadrunner", "k6", "zap", "burp"])],
-        sut: ["Systems under test", "What gets checked: front ends, services and the data behind them.", T(["postman", "salesforce", "sqlserver", "mongodb", "oracle", "adf"])],
-        reports: ["Reports", "Evidence the team can read: what passed, what failed and why.", T(["allure", "jira"])],
+        plan: ["Plan", "Decide what to test and agree on it before code exists.", T(TOOLSET.plan)],
+        code: ["Code", "Write tests and tooling, with AI assistance where it helps.", T(TOOLSET.code)],
+        ci: ["CI pipeline", "Every change triggers the suites automatically.", T(TOOLSET.ci)],
+        fw: ["Test framework", "The automation itself: UI, API and mobile tests.", T(TOOLSET.fw)],
+        exec: ["Execution", "Where the tests actually run.", T(TOOLSET.exec)],
+        load: ["Load and security", "How the system behaves under pressure and under attack.", T(TOOLSET.load)],
+        sut: ["Systems under test", "What gets checked: front ends, services and the data behind them.", T(TOOLSET.sut)],
+        reports: ["Reports", "Evidence the team can read: what passed, what failed and why.", T(TOOLSET.reports)],
       },
       // [from, to, kind] — kind "loop" runs along the bottom back to the start.
       wires: [
@@ -378,6 +417,17 @@
       ],
       order: ["team", "plan", "code", "ci", "fw", "exec", "load", "sut", "reports"],
     });
+
+    const phone = matchMedia("(max-width: 640px)");
+    stackDiagram.querySelectorAll("[data-node]").forEach((b) => b.addEventListener("click", () => {
+      if (!phone.matches || !b.querySelector(".tools")) return;
+      const open = !b.classList.contains("open");
+      stackDiagram.querySelectorAll(".open").forEach((o) => o.classList.remove("open"));
+      b.classList.toggle("open", open);
+      setTimeout(stack.draw, 300); // fallback if transitionend doesn't fire
+    }));
+    // Re-route the wires once a block finishes opening or closing.
+    stackDiagram.addEventListener("transitionend", (e) => { if (e.propertyName === "grid-template-rows") stack.draw(); });
   }
 
   const repoDiagram = document.getElementById("repo-diagram");

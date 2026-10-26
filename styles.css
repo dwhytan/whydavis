@@ -297,6 +297,9 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 }
 .diagram--stack.has-sel .team.selected { box-shadow: none; }
 
+/* Tool chips inside stack blocks: only used on phones, where a block opens in place */
+.tools { display: none; }
+
 /* Portfolio: the repo's own architecture, same engine as the stack diagram */
 .diagram--repo {
   row-gap: 18px;
@@ -446,10 +449,10 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
   .footer { scroll-snap-align: end; padding-bottom: 96px; }
 }
 
-/* Phones and short windows: some sections (Stack, Portfolio) are taller than the
-   screen, and a mandatory snap would trap you inside them. "proximity" settles on
-   a section when you stop near its top and lets long sections scroll freely. */
-@media (max-width: 899px), (max-height: 859px) {
+/* Short desktop windows: some sections are taller than the screen, and a
+   mandatory snap would trap you inside them. "proximity" settles on a section
+   when you stop near its top and lets long sections scroll freely. */
+@media (min-width: 900px) and (max-height: 859px) {
   html { scroll-snap-type: y proximity; scroll-padding-top: 32px; }
   main { padding-top: 32px; }
   .section, .hero {
@@ -460,6 +463,17 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
     scroll-margin-top: 0;
   }
   .footer { scroll-snap-align: end; }
+}
+
+/* Phones and tablets: plain native scrolling. Snapping fights momentum scrolling
+   on touch (iOS pulls the page back near section edges), so sections just flow. */
+@media (max-width: 899px) {
+  html { scroll-snap-type: none; }
+  main { padding-top: 48px; padding-bottom: 24px; }
+  .section { padding: 28px 0; }
+  .hero { padding-top: 16px; }
+  /* no fade-in while scrolling on touch: content is simply there */
+  .js .reveal { opacity: 1; transform: none; transition: none; }
 }
 
 /* ───────── Responsive ───────── */
@@ -512,6 +526,33 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
   .cards button.card { padding: 5px 6px; font-size: 11.5px; }
   .diagram { gap: 12px; }
   .arch-detail:not(.active) { display: none; }
+  /* Stack on phones: tap a block to open it in place and see its tools as icon
+     chips, like the badges. No floating panel here; Portfolio keeps its panel. */
+  .stack-body .arch-detail { display: none !important; }
+  .diagram--stack .tools {
+    display: grid; grid-column: 1 / -1; grid-template-rows: 0fr;
+    transition: grid-template-rows 260ms var(--ease-out), margin-top 260ms var(--ease-out);
+  }
+  .diagram--stack .open .tools { grid-template-rows: 1fr; margin-top: 10px; }
+  .tools-inner { overflow: hidden; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tchip {
+    display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 6px; border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--bp) 35%, transparent); background: rgba(124, 200, 232, 0.07);
+    font: 500 12.5px/1 var(--sans); color: var(--text); text-transform: none; letter-spacing: 0;
+  }
+  .tchip img { width: 20px; height: 20px; object-fit: contain; filter: var(--icon-filter); opacity: 0.9; }
+  .tchip img.color { filter: none; opacity: 1; border-radius: 4px; }
+  .tchip img.sil { filter: brightness(0) invert(1); }
+  .diagram--stack .open .tchip { animation: chip-in 280ms var(--ease-out) both; }
+  .diagram--stack .open .tchip:nth-child(2) { animation-delay: 30ms; }
+  .diagram--stack .open .tchip:nth-child(3) { animation-delay: 60ms; }
+  .diagram--stack .open .tchip:nth-child(4) { animation-delay: 90ms; }
+  .diagram--stack .open .tchip:nth-child(5) { animation-delay: 120ms; }
+  .diagram--stack .open .tchip:nth-child(6) { animation-delay: 150ms; }
+  .diagram--stack .open .tchip:nth-child(7) { animation-delay: 180ms; }
+  @keyframes chip-in { from { opacity: 0; transform: scale(0.85); } }
+  .diagram--stack .dnode.open { border-color: var(--bp); }
+  .diagram--stack .dnode.open::before, .diagram--stack .dnode.open::after { opacity: 1; }
   /* nothing looks selected until the visitor taps a block */
   .diagram:not(.touched) [data-node].selected { border-color: var(--stroke-2); box-shadow: none; }
   .diagram--stack:not(.touched) .dnode.selected::before, .diagram--stack:not(.touched) .dnode.selected::after { opacity: 0.55; }

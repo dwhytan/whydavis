@@ -282,7 +282,7 @@
         b.setAttribute("aria-pressed", n === pinned);
       });
       const [title, text, items = []] = nodes[id];
-      const list = items.map(([name, desc]) => `<li><b>${name}</b> · ${desc}</li>`).join("");
+      const list = items.map(([name, desc]) => `<li><b>${name}</b><span class="desc"> · ${desc}</span></li>`).join("");
       detail.innerHTML = `<div><p class="head"><b>${title}</b></p><p>${text}</p>${list ? `<ul>${list}</ul>` : ""}</div>`;
       draw();
     };
@@ -301,8 +301,8 @@
 
     blocks.forEach((b) => {
       const id = b.dataset.node;
-      b.addEventListener("click", () => { pinned = id; shown = null; show(id); });
-      b.addEventListener("focus", () => { if (b.matches(":focus-visible")) { pinned = id; show(id); } });
+      b.addEventListener("click", () => { pinned = id; shown = null; show(id); detail.classList.add("active"); root.classList.add("touched"); });
+      b.addEventListener("focus", () => { if (b.matches(":focus-visible")) { pinned = id; show(id); detail.classList.add("active"); root.classList.add("touched"); } });
       b.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") show(id); });
     });
     root.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") show(pinned); });

@@ -319,7 +319,7 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 .region-head small { font: 400 11px/1.3 var(--mono); color: var(--text-3); }
 .region-head .icons { display: flex; margin-bottom: 4px; }
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: 100%; }
-button.card { font: inherit; font-size: 12px; cursor: pointer; transition: opacity 180ms ease, border-color 150ms ease, background-color 150ms ease; }
+button.card { min-height: 34px; align-items: center; justify-content: center; text-align: center; font: inherit; font-size: 12px; cursor: pointer; transition: opacity 180ms ease, border-color 150ms ease, background-color 150ms ease; }
 button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); }
 .diagram--repo .card { flex-wrap: wrap; }
 .card em { flex-basis: 100%; font: 400 10.5px/1.3 var(--mono); font-style: normal; color: var(--text-3); }

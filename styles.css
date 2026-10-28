@@ -54,6 +54,9 @@ ul, ol { list-style: none; }
 .nebula {
   z-index: -3;
   background:
+    radial-gradient(16vmax 12vmax at 82% 20%, rgba(232, 128, 150, 0.34), transparent 70%),
+    radial-gradient(14vmax 12vmax at 16% 74%, rgba(96, 156, 232, 0.30), transparent 70%),
+    radial-gradient(10vmax 8vmax at 60% 92%, rgba(240, 170, 110, 0.20), transparent 70%),
     radial-gradient(34vmax 26vmax at 14% 10%, var(--nebula-a), transparent 70%),
     radial-gradient(26vmax 22vmax at 26% 30%, rgba(70, 150, 190, 0.16), transparent 70%),
     radial-gradient(36vmax 28vmax at 86% 64%, var(--nebula-b), transparent 70%),
@@ -71,13 +74,27 @@ ul, ol { list-style: none; }
   -webkit-backdrop-filter: blur(10px) saturate(170%);
 }
 
-/* Windows are frosted glass: a light tint, heavy blur and a soft lit top edge */
+/* Windows are liquid glass: light tint, heavy blur, light pooling along the inner
+   edges and a specular rim that catches light on the top-left and bottom-right corners */
 .window {
-  background: linear-gradient(180deg, rgba(40, 38, 52, 0.16), rgba(14, 13, 19, 0.30));
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 40px 90px -30px rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(24px) saturate(170%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  background: linear-gradient(180deg, rgba(40, 38, 52, 0.14), rgba(14, 13, 19, 0.28));
+  border-color: transparent;
+  box-shadow:
+    inset 0 24px 48px -36px rgba(255, 255, 255, 0.22),
+    inset 0 -24px 48px -36px rgba(255, 255, 255, 0.10),
+    inset 18px 0 36px -32px rgba(255, 255, 255, 0.10),
+    0 40px 90px -30px rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(26px) saturate(180%) brightness(1.08);
+  -webkit-backdrop-filter: blur(26px) saturate(180%) brightness(1.08);
+}
+.window::before, .dock::before {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  border-radius: inherit; padding: 1px;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.12) 22%, rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.12) 78%, rgba(255, 255, 255, 0.38));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
 }
 
 /* ───────── Menu bar ───────── */
@@ -430,7 +447,7 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
 .dock {
   position: fixed; left: 50%; bottom: 14px; z-index: 20; translate: -50% 0;
   display: flex; align-items: flex-end; gap: 6px; padding: 7px 8px;
-  border-radius: 20px; background: var(--glass-strong);
+  border-radius: 20px; background: var(--glass-strong); border-color: transparent;
   /* floats over content, so it blurs more than the windows to stay legible */
   backdrop-filter: blur(22px) saturate(170%); -webkit-backdrop-filter: blur(22px) saturate(170%);
 }

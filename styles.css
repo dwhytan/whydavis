@@ -205,7 +205,7 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
   grid-template-areas:
     "team plan ci   exec    sut"
     "team code fw   exec    sut"
-    "team .    reports load sut";
+    "team ai   reports load sut";
   padding: 6px 0 30px; /* bottom room for the return wire */
 }
 .zone {
@@ -374,6 +374,9 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
 
 /* ───────── Footer ───────── */
 .footer { text-align: center; color: var(--text-3); font-size: 12.5px; padding: 8px 16px 128px; }
+.footer .built-with { margin-top: 4px; font-size: 12px; }
+.footer .built-with a { color: var(--text-2); text-decoration: underline; text-decoration-color: var(--stroke-2); text-underline-offset: 3px; }
+.footer .built-with a:hover { color: var(--text); }
 
 /* ───────── Dock ───────── */
 .dock {
@@ -480,7 +483,7 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
 @media (max-width: 900px) {
   .diagram {
     grid-template-columns: minmax(0, 1fr); gap: 26px; padding-bottom: 0; max-width: 420px; margin: 0 auto; width: 100%;
-    grid-template-areas: "team" "plan" "code" "ci" "fw" "exec" "load" "sut" "reports";
+    grid-template-areas: "team" "plan" "code" "ai" "ci" "fw" "exec" "load" "sut" "reports";
   }
   .zone { display: none; }
   .diagram--repo { grid-template-areas: "dev" "repo" "ci" "suite" "apps" "ai" "report"; }

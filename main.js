@@ -342,7 +342,10 @@
       java: ["Java", "Main language for frameworks, internal tools and test data utilities."],
       typescript: ["TypeScript", "Language for Playwright and Cypress suites."],
       springboot: ["Spring Boot", "Internal tools and service simulators for test environments."],
-      copilot: ["GitHub Copilot", "Speeds up writing test code and analysing requirements."],
+      copilot: ["GitHub Copilot", "Writing and refactoring test code faster inside the IDE."],
+      "ms-copilot": ["Microsoft Copilot", "Analysing requirements and drafting test cases and documentation at work."],
+      "claude-code": ["Claude Code", "Agentic coding assistant with reusable skills. I built this site with it, reviewing each change like a release."],
+      gemini: ["Gemini API", "Explains failed tests in my Playwright project, where I try newer AI ideas."],
       jenkins: ["Jenkins", "Pipelines that build, test and deploy on every change."],
       "github-actions": ["GitHub Actions", "CI for GitHub repositories, including the portfolio suite."],
       gitlab: ["GitLab CI", "CI pipelines for GitLab projects."],
@@ -367,7 +370,7 @@
     // Logo for each tool: [file, class]; "sil" = white silhouette, "color" = brand colors.
     const ICONS = {
       jira: ["jira.svg"], "azure-devops": ["azuredevops.svg"], cucumber: ["cucumber.svg"],
-      java: ["openjdk.svg"], typescript: ["typescript.svg"], springboot: ["springboot.svg"], copilot: ["githubcopilot.svg"],
+      java: ["openjdk.svg"], typescript: ["typescript.svg"], springboot: ["springboot.svg"], copilot: ["githubcopilot.svg"], "ms-copilot": ["mscopilot.png", "color"], "claude-code": ["claude.svg"], gemini: ["googlegemini.svg"],
       jenkins: ["jenkins.svg"], "github-actions": ["githubactions.svg"], gitlab: ["gitlab.svg"],
       serenity: ["serenity.png", "sil"], playwright: ["playwright.svg"], restassured: ["restassured.png", "sil"],
       karate: ["karate.svg"], selenium: ["selenium.svg"], cypress: ["cypress.svg"], appium: ["appium.svg"],
@@ -379,7 +382,8 @@
     };
     const TOOLSET = {
       plan: ["jira", "azure-devops", "cucumber"],
-      code: ["java", "typescript", "springboot", "copilot"],
+      code: ["java", "typescript", "springboot"],
+      ai: ["copilot", "ms-copilot", "claude-code", "gemini"],
       ci: ["jenkins", "github-actions", "gitlab"],
       fw: ["serenity", "playwright", "restassured", "karate", "selenium", "cypress", "appium"],
       exec: ["docker", "testcontainers", "browserstack", "lambdatest", "vault", "gh-secrets"],
@@ -401,7 +405,8 @@
       nodes: {
         team: ["QA and dev team", "Where every test starts: a risk, a requirement or a bug worth never seeing again."],
         plan: ["Plan", "Decide what to test and agree on it before code exists.", T(TOOLSET.plan)],
-        code: ["Code", "Write tests and tooling, with AI assistance where it helps.", T(TOOLSET.code)],
+        code: ["Code", "Write tests, frameworks and internal tooling.", T(TOOLSET.code)],
+        ai: ["AI assist", "Copilot at work, an agent with skills for this site and an LLM that triages failures in my own project. Backed by ISTQB CT-AI: I also know how to test AI systems.", T(TOOLSET.ai)],
         ci: ["CI pipeline", "Every change triggers the suites automatically.", T(TOOLSET.ci)],
         fw: ["Test framework", "The automation itself: UI, API and mobile tests.", T(TOOLSET.fw)],
         exec: ["Execution", "Where the tests actually run.", T(TOOLSET.exec)],
@@ -411,11 +416,11 @@
       },
       // [from, to, kind]; kind "loop" runs along the bottom back to the start.
       wires: [
-        ["team", "plan"], ["team", "code"], ["plan", "code"],
+        ["team", "plan"], ["team", "code"], ["plan", "code"], ["ai", "code"], ["ai", "reports"],
         ["code", "fw"], ["ci", "fw"], ["fw", "exec"], ["exec", "sut"],
         ["load", "sut"], ["fw", "reports"], ["reports", "team", "loop"],
       ],
-      order: ["team", "plan", "code", "ci", "fw", "exec", "load", "sut", "reports"],
+      order: ["team", "plan", "code", "ai", "ci", "fw", "exec", "load", "sut", "reports"],
     });
 
     const phone = matchMedia("(max-width: 640px)");

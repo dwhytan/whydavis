@@ -405,6 +405,8 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
 .arch-detail .head span { margin-left: 8px; font: 400 11.5px/1 var(--mono); color: var(--accent); }
 .arch-detail p { margin-top: 4px; }
 .arch-detail ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 22px; margin-top: 8px; }
+/* four tools read as a 2×2 block instead of three plus one left alone */
+@media (min-width: 900px) { .arch-detail ul:has(> li:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .arch-detail li { font-size: 12.5px; line-height: 1.4; }
 .arch-detail li b { color: var(--text); font-weight: 600; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }

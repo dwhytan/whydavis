@@ -494,12 +494,12 @@
   });
   document.addEventListener("click", () => { if (!finePointer) clear(); });
 
-  /* ── About: practice chips explain themselves (hover / keyboard / tap) ── */
+  /* ── About: highlight chips explain themselves (hover / keyboard / tap) ── */
   const pcap = document.querySelector(".pchip-caption");
   if (pcap) {
     const pchips = [...document.querySelectorAll(".pchip")];
     const live = pcap.querySelector(".cap-live");
-    pcap.querySelector(".cap-default").textContent = finePointer ? "hover a practice to see what it means" : "tap a practice to see what it means";
+    if (!finePointer) pcap.querySelector(".cap-default").textContent = "how I work · tap a chip for details";
     const showTip = (c) => { live.textContent = c.dataset.tip; pcap.classList.add("showing"); };
     const hideTip = () => { pcap.classList.remove("showing"); pchips.forEach((o) => o.classList.remove("active")); };
     pchips.forEach((c) => {

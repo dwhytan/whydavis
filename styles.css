@@ -186,14 +186,8 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 .badges:has(.badge:is(:hover, :focus-visible, .active)) img { opacity: 0.55; }
 .badge:is(:hover, :focus-visible, .active) img { transform: scale(1.3); opacity: 1 !important; }
 .badge:focus-visible { outline-offset: 2px; }
-/* Facts under the badges: how I work, beyond the tools */
-.facts { display: grid; gap: 6px; margin-top: 20px; max-width: 760px; }
-.facts > div { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: baseline; }
-.facts dt { font: 400 12px/1.5 var(--mono); color: var(--accent); }
-.facts dt::before { content: "--"; color: var(--text-3); }
-.facts dd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--text-2); }
-.facts > div { align-items: start; }
-.facts dt { padding-top: 5px; }
+/* Highlights under the badges: a few chips, each explained in the caption below */
+.highlights { margin-top: 20px; }
 /* Practice chips: hover, focus or tap explains each one in the caption below */
 .pchips { display: flex; flex-wrap: wrap; gap: 6px; }
 .pchip {
@@ -210,18 +204,14 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 .pchip-caption .cap-default { transition: opacity 150ms ease; }
 .pchip-caption.showing .cap-default { opacity: 0; }
 .pchip-caption.showing .cap-live { opacity: 1; }
-.langs { display: flex; flex-wrap: wrap; gap: 6px; }
-.lchip {
-  display: inline-flex; align-items: center; gap: 8px; padding: 3px 11px 3px 4px; border-radius: 999px;
-  border: 1px solid var(--stroke); font-size: 13px; color: var(--text-2);
-}
-.lchip b { padding: 2px 7px; border-radius: 999px; font: 600 10.5px/1.4 var(--mono); color: var(--accent); background: var(--accent-soft); }
 
-/* Terminal feel on first load: whoami types itself, then the flags print line by line */
-.facts > div { animation: line-in 380ms var(--ease-out) both; }
-.facts > div:nth-child(1) { animation-delay: 900ms; }
-.facts > div:nth-child(2) { animation-delay: 1040ms; }
-.facts > div:nth-child(3) { animation-delay: 1180ms; }
+/* Terminal feel on first load: whoami types itself, then the chips print one by one */
+.highlights .pchip { animation: line-in 380ms var(--ease-out) both; }
+.highlights .pchip:nth-child(1) { animation-delay: 900ms; }
+.highlights .pchip:nth-child(2) { animation-delay: 970ms; }
+.highlights .pchip:nth-child(3) { animation-delay: 1040ms; }
+.highlights .pchip:nth-child(4) { animation-delay: 1110ms; }
+.highlights .pchip:nth-child(5) { animation-delay: 1180ms; }
 @keyframes line-in { from { opacity: 0; transform: translateY(6px); } }
 .typed.typing::after { content: ""; display: inline-block; width: 7px; height: 13px; margin-left: 2px; vertical-align: -2px; background: var(--text-3); }
 
@@ -620,9 +610,8 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
   /* badges stay on one line; the caption drops below them */
   .badges { gap: 4px; }
   .badge-caption { flex-basis: 100%; white-space: normal; }
-  .facts > div { grid-template-columns: 1fr; gap: 0; }
-  .facts { gap: 8px; margin-top: 16px; }
-  .facts dd { font-size: 13px; }
+  .highlights { margin-top: 16px; }
+  .pchip-caption { min-height: 60px; }
   .badge img { width: 28px; height: 28px; }
   .badge-sep { margin: 0 4px; }
   .mb-nav { display: none; }

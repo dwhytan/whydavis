@@ -361,6 +361,9 @@
       auth: ["JWT, SSO and MFA", "Certificate-based JWT Bearer login for automation, plus SSO and phishing-resistant MFA for elevated access."],
       payments: ["Payments · ISO 8583", "Card, POS and settlement flows."],
       allure: ["Allure Report", "Readable test reports with steps, screenshots, video and traces."],
+      "serenity-reports": ["Serenity reports", "Living documentation: every requirement with its scenarios and whether they pass."],
+      "pw-report": ["Playwright HTML report", "Traces, screenshots and video for each failure, to debug it step by step."],
+      xray: ["Xray in Jira", "Each run's results go back to Xray, linked to the requirement they cover."],
     };
     const T = (ids) => ids.map((t) => TOOLS[t]);
     // Logo for each tool: [file, class]; "sil" = white silhouette, "color" = brand colors.
@@ -374,7 +377,7 @@
       vault: ["vault.svg"], "gh-secrets": ["github.svg"],
       jmeter: ["apachejmeter.svg"], k6: ["k6.svg"], zap: ["owasp.svg"], burp: ["burpsuite.svg"], auth: ["jwt.svg"], payments: ["payments.svg"],
       salesforce: ["salesforce.svg"], sqlserver: ["sqlserver.svg"], mongodb: ["mongodb.svg"],
-      oracle: ["oracle.svg"], adf: ["azure.svg"], allure: ["allure.png", "color"],
+      oracle: ["oracle.svg"], adf: ["azure.svg"], allure: ["allure.png", "color"], "serenity-reports": ["serenity.png", "sil"], "pw-report": ["playwright.svg"], xray: ["jira.svg"],
     };
     const TOOLSET = {
       plan: ["jira", "azure-devops", "cucumber"],
@@ -385,7 +388,7 @@
       exec: ["docker", "testcontainers", "browserstack", "vault", "gh-secrets"],
       load: ["jmeter", "k6", "zap", "burp", "auth"],
       sut: ["salesforce", "sqlserver", "mongodb", "oracle", "adf", "payments"],
-      reports: ["allure"],
+      reports: ["allure", "serenity-reports", "pw-report", "xray"],
     };
     // On phones a block opens in place and shows its tools as icon chips.
     for (const [node, ids] of Object.entries(TOOLSET)) {

@@ -494,6 +494,42 @@
   });
   document.addEventListener("click", () => { if (!finePointer) clear(); });
 
+  /* ── About: practice chips explain themselves (hover / keyboard / tap) ── */
+  const pcap = document.querySelector(".pchip-caption");
+  if (pcap) {
+    const pchips = [...document.querySelectorAll(".pchip")];
+    const live = pcap.querySelector(".cap-live");
+    pcap.querySelector(".cap-default").textContent = finePointer ? "hover a practice to see what it means" : "tap a practice to see what it means";
+    const showTip = (c) => { live.textContent = c.dataset.tip; pcap.classList.add("showing"); };
+    const hideTip = () => { pcap.classList.remove("showing"); pchips.forEach((o) => o.classList.remove("active")); };
+    pchips.forEach((c) => {
+      c.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") showTip(c); });
+      c.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") hideTip(); });
+      c.addEventListener("focus", () => { if (c.matches(":focus-visible")) showTip(c); });
+      c.addEventListener("blur", hideTip);
+      c.addEventListener("click", (e) => {
+        if (finePointer) return;
+        e.stopPropagation();
+        const on = !c.classList.contains("active");
+        hideTip();
+        if (on) { c.classList.add("active"); showTip(c); }
+      });
+    });
+    document.addEventListener("click", () => { if (!finePointer) hideTip(); });
+  }
+
+  /* ── About: "whoami" types itself once on load ── */
+  const typed = document.querySelector(".typed");
+  if (typed && !reduced) {
+    const text = typed.dataset.text;
+    typed.textContent = "";
+    typed.classList.add("typing");
+    [...text].forEach((ch, k) => setTimeout(() => {
+      typed.textContent += ch;
+      if (k === text.length - 1) setTimeout(() => typed.classList.remove("typing"), 250);
+    }, 300 + k * 75));
+  }
+
   if (!finePointer || reduced) return;
 
   /* ── Dock magnification ── */

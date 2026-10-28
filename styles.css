@@ -179,6 +179,39 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 .facts dt { font: 400 12px/1.5 var(--mono); color: var(--accent); }
 .facts dt::before { content: "--"; color: var(--text-3); }
 .facts dd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--text-2); }
+.facts > div { align-items: start; }
+.facts dt { padding-top: 5px; }
+/* Practice chips: hover, focus or tap explains each one in the caption below */
+.pchips { display: flex; flex-wrap: wrap; gap: 6px; }
+.pchip {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px 0 9px;
+  border-radius: 999px; border: 1px solid var(--stroke-2); background: var(--glass-hi);
+  font: 500 12.5px/1 var(--sans); color: var(--text); cursor: default; -webkit-tap-highlight-color: transparent;
+  transition: border-color 150ms ease, background-color 150ms ease, transform 160ms var(--ease-out);
+}
+.pchip svg { width: 14px; height: 14px; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pchip:is(:hover, :focus-visible, .active) { border-color: var(--accent); background: var(--accent-soft); }
+.pchip:active { transform: scale(0.97); }
+.pchip-caption { display: block; position: relative; min-height: 20px; margin-top: 8px; font: 400 12.5px/20px var(--mono); color: var(--text-3); }
+.pchip-caption .cap-live { position: absolute; inset: 0 auto auto 0; color: var(--text-2); opacity: 0; transition: opacity 150ms ease; }
+.pchip-caption .cap-default { transition: opacity 150ms ease; }
+.pchip-caption.showing .cap-default { opacity: 0; }
+.pchip-caption.showing .cap-live { opacity: 1; }
+.langs { display: flex; flex-wrap: wrap; gap: 6px; }
+.lchip {
+  display: inline-flex; align-items: center; gap: 8px; padding: 3px 11px 3px 4px; border-radius: 999px;
+  border: 1px solid var(--stroke); font-size: 13px; color: var(--text-2);
+}
+.lchip b { padding: 2px 7px; border-radius: 999px; font: 600 10.5px/1.4 var(--mono); color: var(--accent); background: var(--accent-soft); }
+
+/* Terminal feel on first load: whoami types itself, then the flags print line by line */
+.facts > div { animation: line-in 380ms var(--ease-out) both; }
+.facts > div:nth-child(1) { animation-delay: 900ms; }
+.facts > div:nth-child(2) { animation-delay: 1040ms; }
+.facts > div:nth-child(3) { animation-delay: 1180ms; }
+@keyframes line-in { from { opacity: 0; transform: translateY(6px); } }
+.typed.typing::after { content: ""; display: inline-block; width: 7px; height: 13px; margin-left: 2px; vertical-align: -2px; background: var(--text-3); }
+
 .badge-caption {
   position: relative; min-height: 20px; flex: 1 1 240px;
   font: 400 12.5px/20px var(--mono); color: var(--text-3); white-space: nowrap;

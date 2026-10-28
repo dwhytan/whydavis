@@ -454,7 +454,7 @@
           ["PokeAPI", "a free public REST API"],
         ]],
         ai: ["Gemini AI review · 1 test", "A demo of AI-assisted triage: a known login failure is sent to Google Gemini, which answers with the likely root cause, a fix and how to prevent it."],
-        report: ["Allure report", "Published to GitHub Pages after every run, with screenshots, video and traces anyone can open. <a class=\"inline-link\" href=\"https://dwhytan.github.io/playwright-e2e-framework\" target=\"_blank\" rel=\"noopener\">Open the live report ↗</a>"],
+        report: ["Live reports", "Published to GitHub Pages after every run: Allure for a readable story of each test, Playwright's own report for traces, screenshots and video. <a class=\"inline-link\" href=\"https://dwhytan.github.io/playwright-e2e-framework/allure/\" target=\"_blank\" rel=\"noopener\">Allure ↗</a> · <a class=\"inline-link\" href=\"https://dwhytan.github.io/playwright-e2e-framework/playwright/\" target=\"_blank\" rel=\"noopener\">Playwright ↗</a>"],
       },
       wires: [
         ["dev", "repo"], ["repo", "ci"], ["ci", "suite"], ["suite", "apps"],

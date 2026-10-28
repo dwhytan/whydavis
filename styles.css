@@ -173,6 +173,12 @@ h2 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.15; font-weight: 700; l
 .badges:has(.badge:is(:hover, :focus-visible, .active)) img { opacity: 0.55; }
 .badge:is(:hover, :focus-visible, .active) img { transform: scale(1.3); opacity: 1 !important; }
 .badge:focus-visible { outline-offset: 2px; }
+/* Facts under the badges: how I work, beyond the tools */
+.facts { display: grid; gap: 6px; margin-top: 20px; max-width: 760px; }
+.facts > div { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: baseline; }
+.facts dt { font: 400 12px/1.5 var(--mono); color: var(--accent); }
+.facts dt::before { content: "--"; color: var(--text-3); }
+.facts dd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--text-2); }
 .badge-caption {
   position: relative; min-height: 20px; flex: 1 1 240px;
   font: 400 12.5px/20px var(--mono); color: var(--text-3); white-space: nowrap;
@@ -568,6 +574,9 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
   /* badges stay on one line; the caption drops below them */
   .badges { gap: 4px; }
   .badge-caption { flex-basis: 100%; white-space: normal; }
+  .facts > div { grid-template-columns: 1fr; gap: 0; }
+  .facts { gap: 8px; margin-top: 16px; }
+  .facts dd { font-size: 13px; }
   .badge img { width: 28px; height: 28px; }
   .badge-sep { margin: 0 4px; }
   .mb-nav { display: none; }

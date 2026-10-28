@@ -418,6 +418,21 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
 .arch-detail li > img { width: 16px; height: 16px; margin-top: 1px; object-fit: contain; filter: var(--icon-filter); opacity: 0.85; }
 .arch-detail li > img.color { filter: none; opacity: 1; border-radius: 3px; }
 .arch-detail li > img.sil { filter: brightness(0) invert(1); }
+
+/* Stack panel as terminal output */
+.stack-body .arch-detail { padding: 14px 18px; border-radius: 10px; background: rgba(6, 6, 9, 0.55); font: 400 12.5px/1.55 var(--mono); }
+.term p { margin: 0; font-size: inherit; line-height: inherit; }
+.term-cmd { color: var(--text); }
+.term-note { margin-top: 2px !important; color: var(--text-3); }
+.term ul { display: grid; grid-template-columns: 1fr !important; gap: 2px; margin: 10px 0 0; }
+.arch-detail .term li { display: grid; grid-template-columns: 16px 200px 1fr; gap: 12px; align-items: start; font-size: inherit; line-height: inherit; animation: line-in 260ms var(--ease-out) both; animation-delay: calc(var(--i) * 45ms); }
+.term li > img { margin-top: 3px; }
+.term li b { color: var(--green); font-weight: 400; }
+.term li span { color: var(--text-2); }
+@media (max-width: 899px) {
+  .arch-detail .term li { grid-template-columns: 16px 1fr; gap: 0 10px; }
+  .term li span { grid-column: 2; }
+}
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chips li {
   display: inline-flex; align-items: center; gap: 6px;

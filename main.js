@@ -204,7 +204,12 @@
 
   /* ── Diagrams: blocks wired with elbow connectors. Selecting a block lights its
         wires and explains it in the panel underneath. Used by Stack and Portfolio. ── */
-  const wireDiagram = (root, detail, { nodes, wires, order, pinned, markers = ["ah", "ah-on"] }) => {
+  // Default panel: a title, a line of context and the tools as a list.
+  const panelHTML = (id, [title, text, items = []]) => {
+    const list = items.map(([name, desc, icon = ""]) => `<li>${icon}<span><b>${name}</b><span class="desc"> · ${desc}</span></span></li>`).join("");
+    return `<div><p class="head"><b>${title}</b></p><p>${text}</p>${list ? `<ul>${list}</ul>` : ""}</div>`;
+  };
+  const wireDiagram = (root, detail, { nodes, wires, order, pinned, markers = ["ah", "ah-on"], render = panelHTML }) => {
     const svgG = root.querySelector(".wire-paths");
     const blocks = [...root.querySelectorAll("[data-node]")];
     // Wires attach to [data-wire] (a region) or to the block itself.
@@ -281,9 +286,7 @@
         b.classList.toggle("linked", linked.has(n) || linked.has(region) || (region === w && n !== id));
         b.setAttribute("aria-pressed", n === pinned);
       });
-      const [title, text, items = []] = nodes[id];
-      const list = items.map(([name, desc, icon = ""]) => `<li>${icon}<span><b>${name}</b><span class="desc"> · ${desc}</span></span></li>`).join("");
-      detail.innerHTML = `<div><p class="head"><b>${title}</b></p><p>${text}</p>${list ? `<ul>${list}</ul>` : ""}</div>`;
+      detail.innerHTML = render(id, nodes[id]);
       draw();
     };
 
@@ -330,7 +333,7 @@
       jira: ["Jira & Xray", "Test plans, cases and defects. Xray links every test to the requirement it covers."],
       "azure-devops": ["Azure DevOps", "Requirement traceability, test runs and defect tracking."],
       cucumber: ["Cucumber · BDD", "Gherkin scenarios that business, dev and QA agree on before any code is written."],
-      serenity: ["Serenity BDD · Screenplay", "My main framework. The Screenplay pattern keeps web and API tests readable and reusable as suites grow."],
+      serenity: ["Serenity BDD · Screenplay", "My main framework. Screenplay keeps web and API tests readable and reusable as suites grow."],
       playwright: ["Playwright", "Fast cross-browser web tests in TypeScript. It powers the portfolio project below."],
       selenium: ["Selenium", "Browser automation for web apps, also used under the hood by Serenity."],
       appium: ["Appium", "Tests for native mobile apps on Android and iOS."],
@@ -399,7 +402,16 @@
       const chips = ids.map((t) => `<span class="tchip">${iconImg(t)}${TOOLS[t][0]}</span>`).join("");
       stackDiagram.querySelector(`[data-node="${node}"]`).insertAdjacentHTML("beforeend", `<span class="tools" aria-hidden="true"><span class="tools-inner">${chips}</span></span>`);
     }
+    // The Stack panel prints like the About terminal: a command, a comment, then one line per tool.
+    const terminalHTML = (id, [title, text, items = []]) => {
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const lines = items.map(([name, desc, icon = ""], i) =>
+        `<li style="--i:${i}">${icon}<b>${name}</b><span>${desc}</span></li>`).join("");
+      return `<div class="term"><p class="term-cmd"><span class="p-user">~</span> <span class="p-sym">❯</span> stack describe ${slug}</p>` +
+        `<p class="term-note"># ${text}</p>${lines ? `<ul>${lines}</ul>` : ""}</div>`;
+    };
     const stack = wireDiagram(stackDiagram, document.getElementById("arch-detail"), {
+      render: terminalHTML,
       pinned: "fw",
       markers: ["dot", "dot-on"],
       nodes: {

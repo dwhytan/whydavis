@@ -282,7 +282,7 @@
         b.setAttribute("aria-pressed", n === pinned);
       });
       const [title, text, items = []] = nodes[id];
-      const list = items.map(([name, desc]) => `<li><b>${name}</b><span class="desc"> · ${desc}</span></li>`).join("");
+      const list = items.map(([name, desc, icon = ""]) => `<li>${icon}<span><b>${name}</b><span class="desc"> · ${desc}</span></span></li>`).join("");
       detail.innerHTML = `<div><p class="head"><b>${title}</b></p><p>${text}</p>${list ? `<ul>${list}</ul>` : ""}</div>`;
       draw();
     };
@@ -365,7 +365,7 @@
       "pw-report": ["Playwright HTML report", "Traces, screenshots and video for each failure, to debug it step by step."],
       xray: ["Xray in Jira", "Each run's results go back to Xray, linked to the requirement they cover."],
     };
-    const T = (ids) => ids.map((t) => TOOLS[t]);
+    const T = (ids) => ids.map((t) => [...TOOLS[t], iconImg(t)]);
     // Logo for each tool: [file, class]; "sil" = white silhouette, "color" = brand colors.
     const ICONS = {
       jira: ["jira.svg"], "azure-devops": ["azuredevops.svg"], cucumber: ["cucumber.svg"],
@@ -378,6 +378,10 @@
       jmeter: ["apachejmeter.svg"], k6: ["k6.svg"], zap: ["owasp.svg"], burp: ["burpsuite.svg"], auth: ["jwt.svg"], payments: ["payments.svg"],
       salesforce: ["salesforce.svg"], sqlserver: ["sqlserver.svg"], mongodb: ["mongodb.svg"],
       oracle: ["oracle.svg"], adf: ["azure.svg"], allure: ["allure.png", "color"], "serenity-reports": ["serenity.png", "sil"], "pw-report": ["playwright.svg"], xray: ["jira.svg"],
+    };
+    const iconImg = (t) => {
+      const [file, cls] = ICONS[t];
+      return `<img src="assets/icons/${file}" alt=""${cls ? ` class="${cls}"` : ""}>`;
     };
     const TOOLSET = {
       plan: ["jira", "azure-devops", "cucumber"],
@@ -392,10 +396,7 @@
     };
     // On phones a block opens in place and shows its tools as icon chips.
     for (const [node, ids] of Object.entries(TOOLSET)) {
-      const chips = ids.map((t) => {
-        const [file, cls] = ICONS[t];
-        return `<span class="tchip"><img src="assets/icons/${file}" alt=""${cls ? ` class="${cls}"` : ""}>${TOOLS[t][0]}</span>`;
-      }).join("");
+      const chips = ids.map((t) => `<span class="tchip">${iconImg(t)}${TOOLS[t][0]}</span>`).join("");
       stackDiagram.querySelector(`[data-node="${node}"]`).insertAdjacentHTML("beforeend", `<span class="tools" aria-hidden="true"><span class="tools-inner">${chips}</span></span>`);
     }
     const stack = wireDiagram(stackDiagram, document.getElementById("arch-detail"), {

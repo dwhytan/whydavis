@@ -409,6 +409,10 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
 @media (min-width: 900px) { .arch-detail ul:has(> li:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .arch-detail li { font-size: 12.5px; line-height: 1.4; }
 .arch-detail li b { color: var(--text); font-weight: 600; }
+.arch-detail li:has(> img) { display: grid; grid-template-columns: 16px 1fr; gap: 9px; align-items: start; }
+.arch-detail li > img { width: 16px; height: 16px; margin-top: 1px; object-fit: contain; filter: var(--icon-filter); opacity: 0.85; }
+.arch-detail li > img.color { filter: none; opacity: 1; border-radius: 3px; }
+.arch-detail li > img.sil { filter: brightness(0) invert(1); }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chips li {
   display: inline-flex; align-items: center; gap: 6px;

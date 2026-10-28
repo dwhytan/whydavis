@@ -180,7 +180,7 @@ h2 { font-size: clamp(26px, 3.6vw, 38px); line-height: 1.1; font-weight: 800; le
 .p-user { color: var(--accent); }
 .p-sym { color: var(--accent-2); }
 .name {
-  font-size: clamp(54px, 10.5vw, 112px); line-height: 0.94; font-weight: 800;
+  font-size: clamp(30px, calc((100vw - 110px) / 7), 104px); line-height: 0.98; white-space: nowrap; font-weight: 800;
   letter-spacing: -0.05em; color: #fff;
 }
 .cursor {

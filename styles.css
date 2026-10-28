@@ -115,7 +115,10 @@ ul, ol { list-style: none; }
 }
 .mb-nav a:hover, .mb-nav a.active { background: var(--glass-hi); color: var(--text); }
 .mb-status { margin-left: auto; display: flex; align-items: center; gap: 10px; color: var(--text-2); }
+.mb-status { gap: 8px; cursor: default; }
+.mb-flag { width: 18px; height: 12px; border-radius: 2px; box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.25); flex: none; }
 .mb-clock { font-variant-numeric: tabular-nums; color: var(--text); }
+.mb-tz { font: 400 11.5px/1 var(--mono); color: var(--text-3); }
 
 .status-dot {
   width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex: none;

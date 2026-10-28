@@ -1,0 +1,6 @@
+# whydavis.me is shared by direct link only.
+# Crawling stays allowed on purpose: search engines must be able to read the
+# "noindex" tag on each page to keep it out of results. Blocking crawling here
+# would hide that tag and could still list the bare URL.
+User-agent: *
+Allow: /

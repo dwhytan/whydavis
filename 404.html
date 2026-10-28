@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Page not found · whydavis</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#16151c">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .lost { min-height: 100svh; display: grid; place-items: center; padding: 16px; }
+    .lost .window { width: min(640px, 100%); }
+    .lost .name { font-size: clamp(56px, 14vw, 96px); }
+    .lost .err { margin-top: 10px; font: 400 14px/1.6 var(--mono); color: var(--accent-2); word-break: break-all; }
+    .lost .lede { margin-top: 16px; color: var(--text-2); }
+  </style>
+</head>
+<body>
+  <div class="nebula" aria-hidden="true"></div>
+  <main class="lost">
+    <article class="window">
+      <div class="titlebar">
+        <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="title">davis@whydavis · zsh</span>
+      </div>
+      <div class="win-body hero-body">
+        <p class="prompt"><span class="p-user">~</span> <span class="p-sym">❯</span> cd <span id="path">/this-page</span></p>
+        <h1 class="name">404<span class="cursor" aria-hidden="true"></span></h1>
+        <p class="err">zsh: no such file or directory: <span id="path-err">/this-page</span></p>
+        <p class="lede">This page doesn't exist, or it moved. Everything lives on the home page.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="/">Back to whydavis.me</a>
+          <a class="btn" href="https://github.com/dwhytan" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </article>
+  </main>
+  <script>
+    // show the path the visitor typed (as text, never as HTML)
+    const p = decodeURIComponent(location.pathname).slice(0, 80);
+    document.getElementById("path").textContent = p;
+    document.getElementById("path-err").textContent = p;
+  </script>
+</body>
+</html>

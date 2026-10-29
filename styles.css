@@ -513,9 +513,10 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
 .dock-sep { width: 1px; align-self: stretch; margin: 4px 3px; background: var(--stroke-2); }
 
 /* ───────── Reveal (window "open") ───────── */
+/* translate only: a scale would throw off the diagram wires measured while it plays */
 .js .reveal {
-  opacity: 0; transform: translateY(18px) scale(0.985);
-  transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
   transition-delay: calc(var(--i, 0) * 70ms);
 }
 .js .reveal.in { opacity: 1; transform: none; }

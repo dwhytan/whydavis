@@ -300,9 +300,10 @@
       const id = b.dataset.node;
       b.addEventListener("click", () => { pinned = id; shown = null; show(id); detail.classList.add("active"); root.classList.add("touched"); });
       b.addEventListener("focus", () => { if (b.matches(":focus-visible")) { pinned = id; show(id); detail.classList.add("active"); root.classList.add("touched"); } });
-      b.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") show(id); });
+      // Ignore hovers that only happen because the page scrolled under a still cursor.
+      b.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse" && !scrolling) show(id); });
     });
-    root.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") show(pinned); });
+    root.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse" && !scrolling) show(pinned); });
 
     show(pinned);
     reserveDetail();

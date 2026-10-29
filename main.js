@@ -183,12 +183,6 @@
   }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
   document.querySelectorAll(".reveal").forEach((el) => revealIO.observe(el));
 
-  /* ── Menu bar clock: my time in Lima, so visitors know when I'm around ── */
-  const clock = document.getElementById("clock");
-  const fmt = new Intl.DateTimeFormat("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", timeZone: "America/Lima" });
-  const tickClock = () => { clock.textContent = fmt.format(new Date()); };
-  tickClock();
-  setInterval(tickClock, 15000);
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ── Active section → menu bar + dock ── */

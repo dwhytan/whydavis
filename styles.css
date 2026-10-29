@@ -86,6 +86,10 @@ ul, ol { list-style: none; }
     0 40px 90px -30px rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(26px) saturate(180%) brightness(1.08);
   -webkit-backdrop-filter: blur(26px) saturate(180%) brightness(1.08);
+  /* keep each window on its own GPU layer for good: when the reveal ends and the
+     transform goes to none, the browser would otherwise drop the layer and
+     repaint the blur, which shows as a one-frame flicker */
+  will-change: transform;
 }
 .window::before, .dock::before {
   content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
@@ -146,6 +150,8 @@ h2 { font-size: clamp(26px, 3.6vw, 38px); line-height: 1.1; font-weight: 800; le
   opacity: 0; transition: opacity 300ms ease;
 }
 .window:hover::after { opacity: 1; }
+/* the sheen follows the pointer, not the page: no glow while content scrolls under a still cursor */
+.scrolling .window::after { opacity: 0; transition: none; }
 .titlebar {
   height: 38px; display: grid; grid-template-columns: 64px 1fr 64px; align-items: center;
   padding: 0 14px; border-bottom: 1px solid var(--stroke);

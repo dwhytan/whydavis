@@ -168,9 +168,10 @@
     }, 150);
   });
   addEventListener("scroll", () => {
+    if (!scrolling) document.documentElement.classList.add("scrolling");
     scrolling = true;
     clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => { scrolling = false; }, 140);
+    scrollTimer = setTimeout(() => { scrolling = false; document.documentElement.classList.remove("scrolling"); }, 140);
   }, { passive: true });
 
   /* ── Reveal on scroll ── */
@@ -180,7 +181,7 @@
       e.target.classList.add("in");
       revealIO.unobserve(e.target);
     }
-  }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+  }, { threshold: 0, rootMargin: "0px 0px 8% 0px" }); // start just before it enters, so it is done by the time it settles
   document.querySelectorAll(".reveal").forEach((el) => revealIO.observe(el));
 
   document.getElementById("year").textContent = new Date().getFullYear();

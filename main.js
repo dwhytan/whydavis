@@ -11,7 +11,7 @@
   const pick = (a) => a[(Math.random() * a.length) | 0];
   const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
   let W = 0, H = 0, dpr = 1, twinklers = [], giants = [], meteors = [], nextMeteor = 0;
-  let scrolling = false, scrollTimer, lastFrame = 0;
+  let scrolling = false, scrollTimer, lastFrame = 0, sy = scrollY;
 
   // Pre-rendered glow sprite per tint, so bright stars cost one drawImage per frame
   const sprites = {};
@@ -71,13 +71,18 @@
     canvas.width = W * dpr; canvas.height = H * dpr;
     canvas.style.width = W + "px"; canvas.style.height = H + "px";
     buildSky();
-    twinklers = Array.from({ length: Math.round((W * H) / 5500) }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      r: Math.random() * 0.9 + 0.35, a: Math.random() * 0.6 + 0.3,
-      s: Math.random() * 0.0025 + 0.0005, p: Math.random() * 6.28, t: pick(TINTS),
-    }));
+    // z is depth for scroll parallax: bigger stars sit closer and drift further.
+    // About one star in ten glints now and then: a brief, soft flare every few seconds.
+    twinklers = Array.from({ length: Math.round((W * H) / 5500) }, () => {
+      const r = Math.random() * 0.9 + 0.35;
+      return {
+        x: Math.random() * W, y: Math.random() * H, r, z: 0.015 + (r - 0.35) * 0.07,
+        a: Math.random() * 0.6 + 0.3, s: Math.random() * 0.0025 + 0.0005, p: Math.random() * 6.28, t: pick(TINTS),
+        glint: Math.random() < 0.1 ? { every: 4000 + Math.random() * 9000, at: Math.random() } : null,
+      };
+    });
     giants = Array.from({ length: Math.max(5, Math.round((W * H) / 110000)) }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
+      x: Math.random() * W, y: Math.random() * H, z: 0.09 + Math.random() * 0.05,
       size: Math.random() * 22 + 14, s: Math.random() * 0.0012 + 0.0004, p: Math.random() * 6.28, t: pick(TINTS),
     }));
   }
@@ -95,28 +100,43 @@
 
   function drawStars(now = 0) {
     if (!reduced) requestAnimationFrame(drawStars);
-    // Twinkles are slow, so ~30fps is plenty; and while the page scrolls, keep the
-    // canvas frozen so the main thread and compositor only have to move content.
-    if (!reduced && (scrolling || now - lastFrame < 33)) return;
+    // The stars trail the page with a little easing, so they keep gliding for a
+    // moment after the scroll stops. Twinkles are slow, so at rest ~30fps is plenty.
+    const lag = reduced ? 0 : scrollY - sy;
+    const moving = Math.abs(lag) > 0.3;
+    if (!reduced && now - lastFrame < (moving ? 15 : 33)) return;
     lastFrame = now;
     if (!W || !H) return;
+    sy = reduced ? scrollY : sy + lag * 0.12;
+    // Scrolling stirs the glints a touch
+    const stir = Math.min(Math.abs(lag) / 600, 0.35);
+    const wrap = (y, z) => (((y - sy * z) % H) + H) % H;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
 
     // twinkling stars
+    ctx.globalCompositeOperation = "lighter";
     for (const s of twinklers) {
       const tw = reduced ? 1 : 0.45 + 0.55 * Math.abs(Math.sin(now * s.s + s.p));
+      const y = wrap(s.y, s.z);
       ctx.fillStyle = `rgba(${s.t},${s.a * tw})`;
-      ctx.fillRect(s.x - s.r, s.y - s.r, s.r * 2, s.r * 2);
+      ctx.fillRect(s.x - s.r, y - s.r, s.r * 2, s.r * 2);
+      if (!s.glint || reduced) continue;
+      const k = (now / s.glint.every + s.glint.at) % 1;
+      const flare = Math.max(k < 0.07 ? Math.sin((Math.PI * k) / 0.07) : 0, stir * tw);
+      if (flare < 0.02) continue;
+      const sz = 6 + 8 * flare;
+      ctx.globalAlpha = 0.85 * flare;
+      ctx.drawImage(sprites[s.t], s.x - sz / 2, y - sz / 2, sz, sz);
+      ctx.globalAlpha = 1;
     }
 
     // bright stars with glow and spikes
-    ctx.globalCompositeOperation = "lighter";
     for (const g of giants) {
       const tw = reduced ? 1 : 0.7 + 0.3 * Math.sin(now * g.s + g.p);
       const sz = g.size * tw;
       ctx.globalAlpha = 0.55 + 0.45 * tw;
-      ctx.drawImage(sprites[g.t], g.x - sz / 2, g.y - sz / 2, sz, sz);
+      ctx.drawImage(sprites[g.t], g.x - sz / 2, wrap(g.y, g.z) - sz / 2, sz, sz);
     }
     ctx.globalAlpha = 1;
 

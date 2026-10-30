@@ -454,9 +454,6 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
 
 /* ───────── Footer ───────── */
 .footer { text-align: center; color: var(--text-3); font-size: 12.5px; padding: 8px 16px 128px; }
-.footer .built-with { margin-top: 4px; font-size: 12px; }
-.footer .built-with a { color: var(--text-2); text-decoration: underline; text-decoration-color: var(--stroke-2); text-underline-offset: 3px; }
-.footer .built-with a:hover { color: var(--text); }
 
 /* ───────── Dock ───────── */
 .dock {

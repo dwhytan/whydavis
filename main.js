@@ -191,6 +191,16 @@ float noise(vec2 q) {
   return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
 }
 float fbm(vec2 q) { float v = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { v += a * noise(q); q = q * 2.03 + 7.1; a *= 0.5; } return v; }
+vec3 spectrum(float x) { x = clamp(x, 0.0, 1.0) * 6.0; return clamp(vec3(abs(x - 3.0) - 1.0, 2.0 - abs(x - 2.0), 2.0 - abs(x - 4.0)), 0.0, 1.0); }
+// a light beam leaving the sun along dir that splits into a rainbow across its width
+vec3 beam(vec2 rel, vec2 dir, float width, float reach, float t) {
+  float along = dot(rel, dir);
+  if (along < 0.0) return vec3(0.0);
+  float w = dot(rel, vec2(-dir.y, dir.x)) / (width * (0.25 + along));
+  float body = exp(-w * w * 2.2) * exp(-along / reach);
+  float flicker = 0.85 + 0.15 * noise(vec2(along * 6.0 - t * 0.4, w * 2.0));
+  return mix(vec3(1.0), spectrum(0.5 + w * 0.42), 0.8) * body * flicker;
+}
 void main() {
   vec2 uv = gl_FragCoord.xy / res.y;               // 0..1 up the screen, x scaled the same
   float ar = res.x / res.y;
@@ -211,7 +221,8 @@ void main() {
     col = vec3(0.006, 0.009, 0.02)
         + vec3(0.05, 0.07, 0.12) * cl * exp(-dd * 10.0)
         + warm * 0.35 * cl * near * exp(-dd * 22.0) * lift
-        + mix(blue, white, near * lift) * exp(-dd * 260.0) * 0.55;
+        + mix(blue, white, near * lift) * exp(-dd * 260.0) * 0.55
+        + spectrum(fract(cl * 1.6 + uv.x * 0.35 + t * 0.01)) * cl * near * exp(-dd * 14.0) * 0.45 * p;
     // city lights: round pin-pricks of a fixed pixel size, placed on a grid that
     // squeezes toward the edge like a sphere, clustered into cities on "land",
     // and fading out where dawn already lights the ground
@@ -236,7 +247,8 @@ void main() {
     float shell = exp(-d * 70.0);
     col += shell * mix(blue * 0.95, mix(warm, white, 0.35), near * lift) * (0.55 + 1.8 * near * lift);
     col += exp(-d * 18.0) * warm * 0.35 * near * near * lift;   // warm scatter above the rim near the sun
-    col += exp(-d * 10.0) * blue * 0.14 * (0.4 + near);
+    col += exp(-d * 10.0) * blue * (0.14 + 0.12 * p) * (0.4 + near);
+    col += exp(-d * 4.0) * vec3(0.12, 0.3, 0.7) * 0.18 * p;   // wide blue glow as the sun comes up
   }
   float above = smoothstep(-0.003, 0.003, d);
   float intensity = mix(0.18, 1.6, p) * (0.95 + 0.05 * sin(t * 1.1));
@@ -247,6 +259,13 @@ void main() {
   col += sun * intensity * mix(0.12, 1.0, above);
   col += rays * vec3(1.0, 0.8, 0.55) * intensity * 0.9 * above;
   col += exp(-abs(q.y) * 240.0) * exp(-abs(q.x) * 1.1) * vec3(0.7, 0.85, 1.0) * intensity * 0.55;   // horizontal streak
+  // prismatic beams: one up into the sky, one sweeping down across the planet; they
+  // drift slowly and grow with the sunrise
+  float sway = 0.03 * sin(t * 0.07);
+  float b = p * p * 1.25;
+  col += beam(q, normalize(vec2(-0.62, 0.42 + sway)), 0.07, 1.4, t) * b;          // up across the sky
+  col += beam(q, normalize(vec2(-0.3, 1.0 - sway)), 0.05, 1.0, t) * b * 0.8;       // steep, beside the windows
+  col += beam(q, normalize(vec2(-0.97, -0.1 - sway * 0.5)), 0.09, 1.6, t) * b;    // low over the planet
   col = 1.0 - exp(-col * 1.25);                      // soft tone map
   col += (hash(gl_FragCoord.xy + fract(t)) - 0.5) / 255.0;   // dither: no banding
   gl_FragColor = vec4(col, 1.0);

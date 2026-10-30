@@ -174,6 +174,125 @@
     scrollTimer = setTimeout(() => { scrolling = false; document.documentElement.classList.remove("scrolling"); }, 140);
   }, { passive: true });
 
+  /* ── Sunrise (WebGL): a planet's edge with the sun rising behind it ──
+     Scroll sets how far the sun has risen (0 at the top, 1 at the bottom); time
+     only shimmers the rays. Drawn at CSS-pixel resolution (sharp, but not retina,
+     to keep the GPU light), 30 fps, paused when the tab is hidden; with reduced
+     motion it only redraws when the scroll changes. */
+  const sunCanvas = document.getElementById("sunrise");
+  const gl = sunCanvas && sunCanvas.getContext("webgl", { antialias: false, alpha: false, powerPreference: "low-power" });
+  if (gl) {
+    const FRAG = `
+precision highp float;
+uniform vec2 res; uniform float t; uniform float p;
+float hash(vec2 q) { return fract(sin(dot(q, vec2(127.1, 311.7))) * 43758.5453); }
+float noise(vec2 q) {
+  vec2 i = floor(q), f = fract(q); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
+}
+float fbm(vec2 q) { float v = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { v += a * noise(q); q = q * 2.03 + 7.1; a *= 0.5; } return v; }
+void main() {
+  vec2 uv = gl_FragCoord.xy / res.y;               // 0..1 up the screen, x scaled the same
+  float ar = res.x / res.y;
+  float R = 3.4;                                     // planet radius, in screen heights
+  vec2 C = vec2(ar * 0.36, 0.16 + 0.12 * p - R);     // centred left of the sun, so the edge tilts
+  float d = length(uv - C) - R;                      // > 0 in space, < 0 on the planet
+  float sx = ar * 0.915;
+  vec2 S = vec2(sx, C.y + sqrt(R * R - (sx - C.x) * (sx - C.x)) + mix(-0.03, 0.018, p));
+  vec2 q = uv - S; float ds = length(q);
+  float near = exp(-pow((uv.x - S.x) / (0.45 + 0.55 * p), 2.0));   // how close to the sun along the horizon
+  float lift = 0.3 + 0.7 * p;
+  vec3 blue = vec3(0.22, 0.52, 1.0), warm = vec3(1.0, 0.52, 0.22), white = vec3(1.0, 0.94, 0.84);
+  vec3 col = vec3(0.004, 0.006, 0.016) + vec3(0.02, 0.035, 0.08) * exp(-max(d, 0.0) * 3.0);
+  if (d < 0.0) {
+    // night side: faint cloud tops, lit warm near the sun and blue along the rim
+    float dd = -d;
+    float cl = fbm(vec2(uv.x * 7.0, dd * 46.0 + uv.x * 0.6));
+    col = vec3(0.006, 0.009, 0.02)
+        + vec3(0.05, 0.07, 0.12) * cl * exp(-dd * 10.0)
+        + warm * 0.35 * cl * near * exp(-dd * 22.0) * lift
+        + mix(blue, white, near * lift) * exp(-dd * 260.0) * 0.55;
+    // city lights: clusters on "land", squeezed toward the edge like a real sphere,
+    // fading out where dawn already lights the ground
+    float v = sqrt(dd) * 5.0;
+    float land = smoothstep(0.42, 0.62, fbm(vec2(uv.x * 2.2, v * 1.6) + 11.0));
+    float glowCity = 0.0;
+    for (int k = 0; k < 2; k++) {
+      float sc = k == 0 ? 34.0 : 78.0;
+      vec2 g = vec2(uv.x, v * 0.55) * sc;
+      vec2 cell = floor(g), f = fract(g);
+      vec2 pos = 0.2 + 0.6 * vec2(hash(cell + 3.1), hash(cell + 7.7));
+      float on = step(k == 0 ? 0.45 : 0.3, hash(cell)) * land;
+      vec2 off = (f - pos) * vec2(1.0, 1.0 + 1.5 / (v + 0.3));   // flatter dots near the edge
+      glowCity += exp(-dot(off, off) * (k == 0 ? 55.0 : 90.0)) * on * (0.35 + 0.65 * hash(cell + 1.3)) * (k == 0 ? 1.0 : 0.6);
+    }
+    float night = (1.0 - near * lift * 0.85) * smoothstep(0.004, 0.03, dd);
+    col += vec3(1.0, 0.72, 0.38) * (glowCity * 1.8 + land * 0.05) * night;
+  } else {
+    // atmosphere: a thin bright shell over a wider blue haze
+    float shell = exp(-d * 70.0);
+    col += shell * mix(blue * 0.95, mix(warm, white, 0.35), near * lift) * (0.55 + 1.8 * near * lift);
+    col += exp(-d * 18.0) * warm * 0.35 * near * near * lift;   // warm scatter above the rim near the sun
+    col += exp(-d * 10.0) * blue * 0.14 * (0.4 + near);
+  }
+  float above = smoothstep(-0.003, 0.003, d);
+  float intensity = mix(0.18, 1.6, p) * (0.95 + 0.05 * sin(t * 1.1));
+  float a = atan(q.y, q.x);
+  float rays = pow(noise(vec2(a * 12.0, t * 0.12)), 3.0) + 0.7 * pow(noise(vec2(a * 31.0 + 3.0, -t * 0.09)), 4.0);
+  rays *= 0.06 / (ds + 0.06);
+  vec3 sun = white * exp(-ds * ds * 5000.0) * 2.4 + mix(warm, white, 0.6) * 0.012 / (ds + 0.012) * 0.6;
+  col += sun * intensity * mix(0.12, 1.0, above);
+  col += rays * vec3(1.0, 0.8, 0.55) * intensity * 0.9 * above;
+  col += exp(-abs(q.y) * 240.0) * exp(-abs(q.x) * 1.1) * vec3(0.7, 0.85, 1.0) * intensity * 0.55;   // horizontal streak
+  col = 1.0 - exp(-col * 1.25);                      // soft tone map
+  col += (hash(gl_FragCoord.xy + fract(t)) - 0.5) / 255.0;   // dither: no banding
+  gl_FragColor = vec4(col, 1.0);
+}`;
+    const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, "attribute vec2 v; void main() { gl_Position = vec4(v, 0.0, 1.0); }"));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    if (gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, "v");
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      const uRes = gl.getUniformLocation(prog, "res"), uT = gl.getUniformLocation(prog, "t"), uP = gl.getUniformLocation(prog, "p");
+      const SCALE = 1;
+      let target = 0, cur = 0, last = 0, drawn = -1;
+      const progress = () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        target = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 1;
+      };
+      const size = () => {
+        sunCanvas.width = Math.max(1, Math.round(innerWidth * SCALE));
+        sunCanvas.height = Math.max(1, Math.round(innerHeight * SCALE));
+        gl.viewport(0, 0, sunCanvas.width, sunCanvas.height);
+        gl.uniform2f(uRes, sunCanvas.width, sunCanvas.height);
+        drawn = -1;
+      };
+      const frame = (now) => {
+        requestAnimationFrame(frame);
+        if (document.hidden || now - last < 33) return;
+        last = now;
+        cur += (target - cur) * 0.12;                   // ease towards the scroll position
+        if (reduced && Math.abs(cur - drawn) < 0.0005) return;
+        gl.uniform1f(uT, reduced ? 0 : now / 1000);
+        gl.uniform1f(uP, cur);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        if (drawn < 0) sunCanvas.classList.add("on");
+        drawn = cur;
+      };
+      addEventListener("scroll", progress, { passive: true });
+      addEventListener("resize", () => { size(); progress(); });
+      size(); progress(); cur = target;
+      requestAnimationFrame(frame);
+    }
+  }
+
   /* ── Reveal on scroll ── */
   const revealIO = new IntersectionObserver((entries) => {
     for (const e of entries) {

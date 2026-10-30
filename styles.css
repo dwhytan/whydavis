@@ -49,20 +49,30 @@ ul, ol { list-style: none; }
 
 /* ───────── Desktop background ───────── */
 #sky, #stars, .nebula { position: fixed; inset: 0; pointer-events: none; }
-#stars { z-index: -1; }
-#sky { z-index: -2; }
+#stars { z-index: -2; }
+#sky { z-index: -3; }
 .nebula {
-  z-index: -3;
+  z-index: -5;
   background:
     radial-gradient(16vmax 12vmax at 82% 20%, rgba(232, 128, 150, 0.34), transparent 70%),
     radial-gradient(14vmax 12vmax at 16% 74%, rgba(96, 156, 232, 0.30), transparent 70%),
-    radial-gradient(10vmax 8vmax at 60% 92%, rgba(240, 170, 110, 0.20), transparent 70%),
     radial-gradient(34vmax 26vmax at 14% 10%, var(--nebula-a), transparent 70%),
     radial-gradient(26vmax 22vmax at 26% 30%, rgba(70, 150, 190, 0.16), transparent 70%),
     radial-gradient(36vmax 28vmax at 86% 64%, var(--nebula-b), transparent 70%),
     radial-gradient(22vmax 18vmax at 70% 82%, rgba(200, 110, 90, 0.12), transparent 70%),
     radial-gradient(30vmax 26vmax at 38% 96%, var(--nebula-c), transparent 70%),
     radial-gradient(120% 90% at 50% 40%, #121019, #060509 75%);
+}
+
+/* ───────── Sunrise ─────────
+   A WebGL canvas (main.js) under the stars. Without WebGL it stays hidden and the
+   nebula below shows instead. */
+.sunrise { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -4; pointer-events: none; opacity: 0; transition: opacity 900ms ease; }
+.sunrise.on { opacity: 1; }
+/* stars only in the sky, never over the planet */
+#sky, #stars {
+  -webkit-mask: linear-gradient(#000 55%, transparent 74%);
+  mask: linear-gradient(#000 55%, transparent 74%);
 }
 
 /* ───────── Glass primitives ───────── */
@@ -465,7 +475,7 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
 .pass.ai::after { border-color: var(--accent-2); }
 
 /* ───────── Footer ───────── */
-.footer { text-align: center; color: var(--text-3); font-size: 12.5px; padding: 8px 16px 128px; }
+.footer { text-align: center; color: var(--text-2); font-size: 12.5px; padding: 8px 16px 128px; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9); /* stays legible over the sunrise */ }
 .footer .built-with { margin-top: 4px; font-size: 12px; }
 .footer .built-with a { color: var(--text-2); text-decoration: underline; text-decoration-color: var(--stroke-2); text-underline-offset: 3px; }
 .footer .built-with a:hover { color: var(--text); }

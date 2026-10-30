@@ -212,22 +212,25 @@ void main() {
         + vec3(0.05, 0.07, 0.12) * cl * exp(-dd * 10.0)
         + warm * 0.35 * cl * near * exp(-dd * 22.0) * lift
         + mix(blue, white, near * lift) * exp(-dd * 260.0) * 0.55;
-    // city lights: clusters on "land", squeezed toward the edge like a real sphere,
-    // fading out where dawn already lights the ground
+    // city lights: round pin-pricks of a fixed pixel size, placed on a grid that
+    // squeezes toward the edge like a sphere, clustered into cities on "land",
+    // and fading out where dawn already lights the ground
     float v = sqrt(dd) * 5.0;
-    float land = smoothstep(0.42, 0.62, fbm(vec2(uv.x * 2.2, v * 1.6) + 11.0));
-    float glowCity = 0.0;
+    float land = smoothstep(0.45, 0.7, fbm(vec2(uv.x * 2.0, v * 1.4) + 11.0));
+    float cities = land * smoothstep(0.5, 0.8, fbm(vec2(uv.x * 7.0, v * 5.0) + 3.0));
+    float lights = 0.0;
     for (int k = 0; k < 2; k++) {
-      float sc = k == 0 ? 34.0 : 78.0;
-      vec2 g = vec2(uv.x, v * 0.55) * sc;
-      vec2 cell = floor(g), f = fract(g);
-      vec2 pos = 0.2 + 0.6 * vec2(hash(cell + 3.1), hash(cell + 7.7));
-      float on = step(k == 0 ? 0.45 : 0.3, hash(cell)) * land;
-      vec2 off = (f - pos) * vec2(1.0, 1.0 + 1.5 / (v + 0.3));   // flatter dots near the edge
-      glowCity += exp(-dot(off, off) * (k == 0 ? 55.0 : 90.0)) * on * (0.35 + 0.65 * hash(cell + 1.3)) * (k == 0 ? 1.0 : 0.6);
+      float sc = k == 0 ? 60.0 : 140.0;
+      vec2 cell = floor(vec2(uv.x, v) * sc);
+      vec2 pos = (cell + 0.2 + 0.6 * vec2(hash(cell + 3.1), hash(cell + 7.7))) / sc;
+      vec2 px = vec2(uv.x - pos.x, dd - pow(pos.y / 5.0, 2.0)) * res.y;   // offset in pixels
+      float m = k == 0 ? cities * 0.9 : land * 0.25 + cities * 0.45;
+      float on = step(1.0 - m, hash(cell));
+      float r = k == 0 ? 1.15 : 0.8;
+      lights += exp(-dot(px, px) / (r * r)) * on * (0.45 + 0.55 * hash(cell + 1.3)) * (k == 0 ? 1.0 : 0.55);
     }
     float night = (1.0 - near * lift * 0.85) * smoothstep(0.004, 0.03, dd);
-    col += vec3(1.0, 0.72, 0.38) * (glowCity * 1.8 + land * 0.05) * night;
+    col += vec3(1.0, 0.76, 0.42) * (lights * 1.7 + cities * 0.07) * night;
   } else {
     // atmosphere: a thin bright shell over a wider blue haze
     float shell = exp(-d * 70.0);

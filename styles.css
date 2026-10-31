@@ -550,9 +550,9 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
    on touch (iOS pulls the page back near section edges), so sections just flow. */
 @media (max-width: 899px) {
   html { scroll-snap-type: none; }
-  main { padding-top: 48px; padding-bottom: 24px; }
+  main { padding-top: 36px; padding-bottom: 24px; }
   .section { padding: 28px 0; }
-  .hero { padding-top: 16px; }
+  .hero { padding-top: 0; }
   /* no fade-in while scrolling on touch: content is simply there */
   .js .reveal { opacity: 1; transform: none; transition: none; }
 }
@@ -596,10 +596,12 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
   .dregion { padding: 8px; }
   .dregion .cmd { align-self: flex-start; }
   .arch-detail { padding: 10px 12px; font-size: 13px; }
-  /* Lighter diagrams on phones: titles and icons only; the details (subtitles,
-     inner cards, commands) live in the panel that opens when you tap a block. */
-  .dnode small, .region-head small, .region .card, .dnode .cmd, .dregion .cmd { display: none; }
-  .region { grid-template-columns: 1fr; padding: 9px 12px; }
+  /* Phones keep the desktop's titles and subtitles. Stack's inner cards and command
+     live in the terminal that opens when you tap a block; Work keeps its own. */
+  .diagram--stack .region .card, .diagram--stack .dnode .cmd { display: none; }
+  .diagram--stack .region { grid-template-columns: 1fr; padding: 9px 12px; }
+  .diagram--repo .region { grid-template-columns: 1fr 1fr; }
+  .dnode small, .region-head small { font-size: 11px; }
   .region > b { margin: 0; }
   .dnode:not(.region), .region-head { padding: 8px 12px; }
   .dnode:not(.region) > .icons, .region-head > .icons { grid-row: 1; }
@@ -615,23 +617,26 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
     transition: grid-template-rows 260ms var(--ease-out), margin-top 260ms var(--ease-out);
   }
   .diagram--stack .open .tools { grid-template-rows: 1fr; margin-top: 10px; }
-  .tools-inner { overflow: hidden; display: flex; flex-wrap: wrap; gap: 6px; }
-  .tchip {
-    display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 6px; border-radius: 999px;
-    border: 1px solid color-mix(in srgb, var(--bp) 35%, transparent); background: rgba(124, 200, 232, 0.07);
-    font: 500 12.5px/1 var(--sans); color: var(--text); text-transform: none; letter-spacing: 0;
+  .tools-inner { overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+  .tools-term {
+    grid-column: 1 / -1; display: grid; grid-template-columns: inherit; gap: inherit;
+    padding: 10px 12px; border-radius: 8px; background: rgba(6, 6, 9, 0.55); border: 1px solid var(--stroke);
+    font: 400 11.5px/1.5 var(--mono); text-transform: none; letter-spacing: 0;
   }
-  .tchip img { width: 20px; height: 20px; object-fit: contain; filter: var(--icon-filter); opacity: 0.9; }
-  .tchip img.color { filter: none; opacity: 1; border-radius: 4px; }
+  .tprompt { grid-column: 1 / -1; color: var(--text-2); }
+  .tprompt .p-user { color: var(--accent); }
+  .tprompt .p-sym { color: var(--accent-2); }
+  .tchip { display: inline-flex; align-items: center; gap: 7px; min-width: 0; color: var(--green); }
+  .tchip img { width: 15px; height: 15px; flex: none; object-fit: contain; filter: var(--icon-filter); opacity: 0.9; }
+  .tchip img.color { filter: none; opacity: 1; border-radius: 3px; }
   .tchip img.sil { filter: brightness(0) invert(1); }
-  .diagram--stack .open .tchip { animation: chip-in 280ms var(--ease-out) both; }
+  .diagram--stack .open .tchip { animation: line-in 260ms var(--ease-out) both; }
   .diagram--stack .open .tchip:nth-child(2) { animation-delay: 30ms; }
   .diagram--stack .open .tchip:nth-child(3) { animation-delay: 60ms; }
   .diagram--stack .open .tchip:nth-child(4) { animation-delay: 90ms; }
   .diagram--stack .open .tchip:nth-child(5) { animation-delay: 120ms; }
   .diagram--stack .open .tchip:nth-child(6) { animation-delay: 150ms; }
   .diagram--stack .open .tchip:nth-child(7) { animation-delay: 180ms; }
-  @keyframes chip-in { from { opacity: 0; transform: scale(0.85); } }
   .diagram--stack .dnode.open { border-color: var(--bp); }
   .diagram--stack .dnode.open::before, .diagram--stack .dnode.open::after { opacity: 1; }
   /* nothing looks selected until the visitor taps a block */
@@ -647,10 +652,11 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
   .badges { gap: 4px; }
   .badge-caption { flex-basis: 100%; white-space: normal; }
   .highlights { margin-top: 16px; }
-  .pchip-caption { min-height: 60px; }
+  .pchip-caption { min-height: 34px; }
   .badge img { width: 28px; height: 28px; }
   .badge-sep { margin: 0 4px; }
-  .mb-nav { display: none; }
+  .menubar { gap: 12px; }
+  .mb-nav a { padding: 2px 7px; }
   .win-body { padding: 20px; }
   .section { padding: 40px 0; }
   .dock { gap: 4px; padding: 6px; border-radius: 18px; }

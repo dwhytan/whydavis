@@ -402,10 +402,13 @@
       sut: ["salesforce", "sqlserver", "mongodb", "oracle", "adf", "payments"],
       reports: ["allure", "serenity-reports", "pw-report", "xray"],
     };
-    // On phones a block opens in place and shows its tools as icon chips.
+    // On phones a block opens in place as a small terminal listing its tools.
     for (const [node, ids] of Object.entries(TOOLSET)) {
       const chips = ids.map((t) => `<span class="tchip">${iconImg(t)}${TOOLS[t][0]}</span>`).join("");
-      stackDiagram.querySelector(`[data-node="${node}"]`).insertAdjacentHTML("beforeend", `<span class="tools" aria-hidden="true"><span class="tools-inner">${chips}</span></span>`);
+      const el = stackDiagram.querySelector(`[data-node="${node}"]`);
+      const slug = el.querySelector("b").textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const prompt = `<span class="tprompt"><span class="p-user">~</span> <span class="p-sym">❯</span> stack describe ${slug}</span>`;
+      el.insertAdjacentHTML("beforeend", `<span class="tools" aria-hidden="true"><span class="tools-inner"><span class="tools-term">${prompt}${chips}</span></span></span>`);
     }
     // The Stack panel prints like the About terminal: a command, a comment, then one line per tool.
     const terminalHTML = (id, [title, text, items = []]) => {

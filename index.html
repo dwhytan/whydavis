@@ -173,11 +173,12 @@
         <div class="win-body repo-body">
           <div class="repo-head">
             <div>
-              <p class="repo-lede">An end-to-end test framework in Playwright and TypeScript. On every push it checks a demo online store and a public API (user flows, API contracts, accessibility, visuals, mobile and performance) and publishes Allure and Playwright reports anyone can open.</p>
+              <p class="repo-lede">Playwright and TypeScript tests for PeruRail's live booking site. 19 risk-based tests found 5 defects and 7 minor issues, and a Gemini layer triages the failures.</p>
             </div>
             <div class="cta">
               <a class="btn btn-primary" href="https://dwhytan.github.io/playwright-e2e-framework/allure/" target="_blank" rel="noopener"><span class="status-dot" aria-hidden="true"></span>Allure report <span aria-hidden="true">↗</span></a>
               <a class="btn" href="https://dwhytan.github.io/playwright-e2e-framework/playwright/" target="_blank" rel="noopener"><span class="status-dot" aria-hidden="true"></span>Playwright report <span aria-hidden="true">↗</span></a>
+              <a class="btn" href="https://github.com/dwhytan/playwright-e2e-framework/blob/main/docs/findings.md" target="_blank" rel="noopener">Findings <span aria-hidden="true">↗</span></a>
               <a class="btn" href="https://github.com/dwhytan/playwright-e2e-framework" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a>
             </div>
           </div>
@@ -189,35 +190,35 @@
             </button>
             <button class="dnode" type="button" data-node="repo" style="grid-area:repo">
               <span class="icons" aria-hidden="true"><img src="assets/icons/git.svg" alt=""><img src="assets/icons/typescript.svg" alt=""></span>
-              <b>GitHub repo</b><small>tests · page objects</small>
+              <b>GitHub repo</b><small>tests · docs · AI</small>
             </button>
             <button class="dnode" type="button" data-node="ci" style="grid-area:ci">
               <span class="icons" aria-hidden="true"><img src="assets/icons/githubactions.svg" alt=""></span>
-              <b>GitHub Actions</b><small>clean Ubuntu run</small>
+              <b>GitHub Actions</b><small>smoke on every push</small>
             </button>
             <div class="dregion" data-wire="suite" style="grid-area:suite">
               <button class="region-head" type="button" data-node="suite">
                 <span class="icons" aria-hidden="true"><img src="assets/icons/playwright.svg" alt=""></span>
-                <b>Playwright</b><small>31 tests · Chromium · Firefox · WebKit</small>
+                <b>Playwright</b><small>19 tests · Firefox · WebKit</small>
               </button>
               <div class="cards">
-                <button class="card" type="button" data-node="ui">Shopping flows</button>
-                <button class="card" type="button" data-node="api">API · contract</button>
+                <button class="card" type="button" data-node="search">Train search</button>
+                <button class="card" type="button" data-node="pax">Passengers</button>
+                <button class="card" type="button" data-node="session">Session</button>
                 <button class="card" type="button" data-node="a11y">Accessibility</button>
-                <button class="card" type="button" data-node="visual">Visual</button>
-                <button class="card" type="button" data-node="mobile">Mobile</button>
-                <button class="card" type="button" data-node="perf">Performance</button>
+                <button class="card" type="button" data-node="mobile">Mobile · speed</button>
+                <button class="card" type="button" data-node="resil">Resilience</button>
               </div>
-              <code class="cmd">npx playwright test</code>
+              <code class="cmd">npm run test:smoke</code>
             </div>
             <button class="dnode region sut" type="button" data-node="apps" style="grid-area:apps">
-              <b>Apps under test</b><small>public demo targets</small>
-              <span class="card">Sauce Demo<em>web shop</em></span>
-              <span class="card">PokeAPI<em>REST API</em></span>
+              <b>System under test</b><small>live, read-only</small>
+              <span class="card">PeruRail<em>train booking</em></span>
+              <span class="card">perurail.com<em>policy pages</em></span>
             </button>
             <button class="dnode" type="button" data-node="ai" style="grid-area:ai">
               <span class="icons" aria-hidden="true"><img src="assets/icons/googlegemini.svg" alt=""></span>
-              <b>Gemini AI review</b><small>explains a failure</small>
+              <b>Gemini AI layer</b><small>triage · ask · i18n</small>
             </button>
             <button class="dnode" type="button" data-node="report" style="grid-area:report">
               <span class="icons" aria-hidden="true"><img src="assets/icons/allure.png" alt="" class="color"><img src="assets/icons/playwright.svg" alt=""></span>

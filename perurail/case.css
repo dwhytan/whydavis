@@ -166,7 +166,7 @@ html.case { scroll-snap-type: none; scroll-padding-top: 48px; }
   .case main { padding-top: 48px; }
   .cs { padding: 28px 0; }
   .menubar { gap: 10px; }
-  .mb-nav { overflow-x: auto; scrollbar-width: none; }
+  .mb-nav { min-width: 0; overflow-x: auto; scrollbar-width: none; }
   .mb-nav a { padding: 2px 6px; white-space: nowrap; }
   .case .mb-nav { display: flex; }
   .kpi { padding: 14px; }

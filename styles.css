@@ -102,10 +102,18 @@ ul, ol { list-style: none; }
 .mb-brand strong { font-weight: 700; letter-spacing: -0.01em; }
 .mb-nav { display: flex; gap: 2px; }
 .mb-nav a {
-  padding: 2px 9px; border-radius: 6px; color: var(--text-2);
+  padding: 2px 9px; white-space: nowrap; border-radius: 6px; color: var(--text-2);
   transition: background-color 150ms ease, color 150ms ease;
 }
 .mb-nav a:hover, .mb-nav a.active { background: var(--glass-hi); color: var(--text); }
+.lang { display: flex; gap: 2px; margin-left: auto; padding: 2px; border-radius: 8px; border: 1px solid var(--stroke); background: var(--glass-hi); }
+.lang button {
+  height: 20px; padding: 0 7px; border: 0; border-radius: 6px; background: none; cursor: pointer;
+  font: 500 11px/1 var(--mono); letter-spacing: 0.04em; color: var(--text-3);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.lang button:hover { color: var(--text); }
+.lang button[aria-pressed="true"] { background: var(--accent-soft); color: #fff; }
 
 .status-dot {
   width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex: none;
@@ -656,8 +664,10 @@ button.card:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text); 
   .pchip-caption { min-height: 34px; }
   .badge img { width: 28px; height: 28px; }
   .badge-sep { margin: 0 4px; }
-  .menubar { gap: 12px; }
-  .mb-nav a { padding: 2px 7px; }
+  .menubar { gap: 10px; }
+  .mb-nav { gap: 0; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .mb-nav a { padding: 2px 6px; }
+  .lang button { padding: 0 6px; }
   .win-body { padding: 20px; }
   .section { padding: 40px 0; }
   .dock { gap: 4px; padding: 6px; border-radius: 18px; }

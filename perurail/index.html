@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en" class="case">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PeruRail case study · whydavis</title>
+  <meta name="description" content="How Davis Huaytán tested PeruRail's live booking site: use cases, risk analysis, a 19-case test matrix and the defects found.">
+  <meta name="theme-color" content="#16151c">
+  <meta property="og:title" content="PeruRail case study · Davis Huaytán">
+  <meta property="og:description" content="Use cases, risk analysis, test matrix and findings from testing a live booking site with Playwright.">
+  <meta property="og:url" content="https://whydavis.me/perurail/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://whydavis.me/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://whydavis.me/perurail/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="case.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="nebula" aria-hidden="true"></div>
+
+  <header class="menubar">
+    <a class="mb-brand" href="../" aria-label="Back to whydavis.me">
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4.2" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(-28 12 12)"/></svg>
+      <strong>whydavis</strong>
+    </a>
+    <nav class="mb-nav" aria-label="Sections">
+      <a href="#overview">Overview</a>
+      <a href="#use-cases">Use cases</a>
+      <a href="#risks">Risks</a>
+      <a href="#tests">Tests</a>
+      <a href="#findings">Findings</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- Overview -->
+    <section id="overview" class="cs">
+      <a class="back" href="../#work"><span aria-hidden="true">←</span> whydavis.me</a>
+      <p class="eyebrow">Case study</p>
+      <h1 class="cs-title">Testing PeruRail's live booking site</h1>
+      <p class="cs-lede">PeruRail sells train tickets to Machu Picchu. I tested its booking site the way I would test any system I don't own: explore it, rank the risks, design tests with formal techniques, automate what is safe to automate and report what I found. Everything ran on production, so nothing was booked and no personal data was entered.</p>
+
+      <div class="kpis">
+        <div class="kpi glass"><b>19</b><span>test cases, each traced to a risk</span></div>
+        <div class="kpi glass"><b>12</b><span>risks ranked by likelihood × impact</span></div>
+        <div class="kpi glass"><b>5<small> + 7</small></b><span>defects with a test, plus minor issues</span></div>
+        <div class="kpi glass"><b>0</b><span>bookings made or personal data entered</span></div>
+      </div>
+
+      <div class="cta">
+        <a class="btn btn-primary" href="https://dwhytan.github.io/playwright-e2e-framework/playwright/" target="_blank" rel="noopener"><span class="status-dot" aria-hidden="true"></span>Playwright report <span aria-hidden="true">↗</span></a>
+        <a class="btn" href="https://dwhytan.github.io/playwright-e2e-framework/allure/" target="_blank" rel="noopener"><span class="status-dot" aria-hidden="true"></span>Allure report <span aria-hidden="true">↗</span></a>
+        <a class="btn" href="https://github.com/dwhytan/playwright-e2e-framework" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <article class="window reveal">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">How I worked</span>
+        </div>
+        <div class="win-body">
+          <ol class="steps">
+            <li><span class="step-n">01</span><b>Explore</b><span>Walked the booking flow by hand, read its rules and watched its network calls.</span></li>
+            <li><span class="step-n">02</span><b>Rank the risks</b><span>Scored what could go wrong for a traveller, so the riskiest areas were tested first.</span></li>
+            <li><span class="step-n">03</span><b>Design the tests</b><span>Boundary values, decision tables, equivalence partitioning and use cases.</span></li>
+            <li><span class="step-n">04</span><b>Automate and report</b><span>Playwright in Firefox and WebKit, with every defect written up for the business.</span></li>
+          </ol>
+          <p class="rules-head">House rules for testing on production</p>
+          <ul class="rules">
+            <li><b>Read-only</b><span>never submits passenger data, never pays</span></li>
+            <li><b>One test at a time</b><span>one worker, runs never overlap</span></li>
+            <li><b>No evasion</b><span>the bot protection blocks Chromium, so Chromium is left out</span></li>
+            <li><b>Mock, don't hammer</b><span>failures are simulated in the browser with <code>page.route()</code></span></li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <!-- Use cases -->
+    <section id="use-cases" class="cs">
+      <header class="sec-head">
+        <p class="eyebrow">Use cases</p>
+        <h2>What a traveller does on the site</h2>
+        <p class="sec-sub">Each use case is covered by the tests listed in it. Select one to see them.</p>
+      </header>
+      <article class="window reveal">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">Use case diagram · book.perurail.com</span>
+        </div>
+        <div class="win-body uc-body">
+          <div class="uc-diagram" id="uc-diagram" role="group" aria-label="Use case diagram"></div>
+          <div class="uc-detail" id="uc-detail" aria-live="polite"></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Risks -->
+    <section id="risks" class="cs">
+      <header class="sec-head">
+        <p class="eyebrow">Risk analysis</p>
+        <h2>What could go wrong, ranked</h2>
+        <p class="sec-sub">Likelihood and impact are rated 1 to 3; risk is their product. Risks scored 6 were automated first.</p>
+      </header>
+      <article class="window reveal">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">Risk matrix · likelihood × impact</span>
+        </div>
+        <div class="win-body risk-body">
+          <div class="heat" id="heat"></div>
+          <ol class="risk-list" id="risk-list"></ol>
+        </div>
+      </article>
+    </section>
+
+    <!-- Tests -->
+    <section id="tests" class="cs">
+      <header class="sec-head">
+        <p class="eyebrow">Test matrix</p>
+        <h2>19 test cases, traced to risks</h2>
+        <p class="sec-sub">A known defect stays as a test marked <code>test.fail()</code>: the suite stays green, and the test turns red the day PeruRail fixes it.</p>
+      </header>
+      <article class="window reveal">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">tests/perurail · Firefox · WebKit</span>
+        </div>
+        <div class="win-body tm-body">
+          <div class="filters" id="tm-filters" role="toolbar" aria-label="Filter test cases"></div>
+          <div class="tm-scroll">
+            <table class="tm" id="tm">
+              <thead><tr><th scope="col">ID</th><th scope="col">Test case</th><th scope="col">Technique</th><th scope="col">Risk</th><th scope="col">Result</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Findings -->
+    <section id="findings" class="cs">
+      <header class="sec-head">
+        <p class="eyebrow">Findings</p>
+        <h2>What testing turned up</h2>
+        <p class="sec-sub">Observed in October 2026, in the English version of the site. It may have changed since.</p>
+      </header>
+      <article class="window reveal">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">docs/findings.md</span>
+        </div>
+        <div class="win-body fd-body">
+          <div class="tabs" id="fd-tabs" role="tablist" aria-label="Findings"></div>
+          <div class="fd-panel" id="fd-panel" role="tabpanel"></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Pipeline and AI -->
+    <section id="pipeline" class="cs">
+      <header class="sec-head">
+        <p class="eyebrow">Pipeline and AI</p>
+        <h2>How it runs</h2>
+      </header>
+      <div class="pipe-grid">
+        <article class="window reveal">
+          <div class="titlebar">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="title">.github/workflows/playwright.yml</span>
+          </div>
+          <div class="win-body">
+            <ol class="flow">
+              <li><b>Every push or pull request</b><span>runs the smoke tests, a quick check that keeps traffic to PeruRail low</span></li>
+              <li><b>On demand</b><span>runs the full suite and publishes both reports to GitHub Pages</span></li>
+              <li><b>After every run</b><span>Gemini suggests why each failed test failed</span></li>
+            </ol>
+          </div>
+        </article>
+        <article class="window reveal">
+          <div class="titlebar">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="title">ai/ · Google Gemini</span>
+          </div>
+          <div class="win-body">
+            <ul class="ai-cmds">
+              <li><code>ai:triage</code><span>sorts each failure into product defect, test defect, environment or flaky</span></li>
+              <li><code>ai:ask</code><span>answers questions about PeruRail's policies and the suite, citing its sources</span></li>
+              <li><code>ai:i18n</code><span>lists texts on the English pages that are not in English</span></li>
+            </ul>
+            <p class="ai-note">Advisory only: it suggests and a QA confirms. It never changes a test result, and the assistant found that the luggage policy contradicts itself (M6).</p>
+          </div>
+        </article>
+      </div>
+      <article class="window reveal oos">
+        <div class="titlebar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="title">Out of scope, on purpose</span>
+        </div>
+        <div class="win-body">
+          <ul class="oos-list">
+            <li><b>Passenger data and payment</b><span>would create real reservations or hold real seats</span></li>
+            <li><b>Coupon codes</b><span>guessing codes against production is not acceptable</span></li>
+            <li><b>Load and security testing</b><span>never against a production system I don't own</span></li>
+            <li><b>Chromium</b><span>the bot protection denies it, and I respect that</span></li>
+          </ul>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year">2026</span> Davis Huaytán · <a href="../">whydavis.me</a></p>
+  </footer>
+
+  <script src="../main.js" defer></script>
+  <script src="case.js" defer></script>
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "da24d4a534864f099feae7750978d0eb"}'></script>
+</body>
+</html>

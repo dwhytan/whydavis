@@ -193,7 +193,8 @@
   }, { threshold: 0, rootMargin: "0px 0px 8% 0px" }); // start just before it enters, so it is done by the time it settles
   document.querySelectorAll(".reveal").forEach((el) => revealIO.observe(el));
 
-  document.getElementById("year").textContent = new Date().getFullYear();
+  const year = document.getElementById("year");
+  if (year) year.textContent = new Date().getFullYear();
 
   /* ── Active section → menu bar + dock ── */
   const links = [...document.querySelectorAll('.mb-nav a, .dock-item[href^="#"]')];
@@ -517,7 +518,7 @@
       if (on) { b.classList.add("active"); show(b); }
     });
   });
-  document.addEventListener("click", () => { if (!finePointer) clear(); });
+  if (certsRow) document.addEventListener("click", () => { if (!finePointer) clear(); });
 
   /* ── About: highlight chips explain themselves (hover / keyboard / tap) ── */
   const pcap = document.querySelector(".pchip-caption");
@@ -559,16 +560,18 @@
 
   /* ── Dock magnification ── */
   const dock = document.querySelector(".dock");
-  const items = [...dock.querySelectorAll(".dock-item")];
-  dock.addEventListener("pointermove", (e) => {
-    for (const it of items) {
-      const r = it.getBoundingClientRect();
-      const d = Math.abs(e.clientX - (r.left + r.width / 2));
-      const s = 1 + 0.42 * Math.max(0, 1 - d / 110);
-      it.style.setProperty("--s", s.toFixed(3));
-    }
-  });
-  dock.addEventListener("pointerleave", () => items.forEach((it) => it.style.setProperty("--s", 1)));
+  if (dock) {
+    const items = [...dock.querySelectorAll(".dock-item")];
+    dock.addEventListener("pointermove", (e) => {
+      for (const it of items) {
+        const r = it.getBoundingClientRect();
+        const d = Math.abs(e.clientX - (r.left + r.width / 2));
+        const s = 1 + 0.42 * Math.max(0, 1 - d / 110);
+        it.style.setProperty("--s", s.toFixed(3));
+      }
+    });
+    dock.addEventListener("pointerleave", () => items.forEach((it) => it.style.setProperty("--s", 1)));
+  }
 
   /* ── Glass sheen follows the pointer ── */
   document.querySelectorAll(".window").forEach((w) => {
